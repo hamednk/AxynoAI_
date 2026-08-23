@@ -1,0 +1,39 @@
+# dependencies & build output
+node_modules
+.next
+out
+build
+dist
+
+# git / IDE
+.git
+.gitignore
+.gitattributes
+.cursor
+.vscode
+.idea
+
+# env & secrets
+.env
+.env.*
+!.env.example
+
+# docs & misc
+README.md
+AGENTS.md
+CLAUDE.md
+*.md
+LICENSE
+
+# tests / lint / local
+coverage
+.nyc_output
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# typescript / eslint caches
+*.tsbuildinfo
+.eslintcache
+next-env.d.ts
