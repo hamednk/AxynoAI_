@@ -1,0 +1,280 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ——— Axial Signal: light-first limestone laboratory ——— */
+:root {
+  --background: #e4e8ee;
+  --foreground: #10141c;
+  --muted: #5a6474;
+  --card: #f3f5f8;
+  --card-border: rgba(16, 20, 28, 0.12);
+  --accent: #c83228;
+  --accent-bright: #e04a3c;
+  --accent-soft: rgba(200, 50, 40, 0.1);
+  --navy: #1a2332;
+  --navy-deep: #0c1018;
+  --surface: #d5dae3;
+  --steel: #3d5a73;
+  --ink-soft: #2a3344;
+  --glow: rgba(200, 50, 40, 0.14);
+  --shadow-card: 0 1px 0 rgba(16, 20, 28, 0.06);
+  --shadow-card-hover: 0 12px 32px -20px rgba(16, 20, 28, 0.28);
+  --hero-gradient:
+    linear-gradient(165deg, #cfd6e0 0%, #e4e8ee 38%, #dce2ea 100%);
+  --cta-gradient: linear-gradient(135deg, #0c1018 0%, #1a2332 55%, #2a3d52 100%);
+  --header-bg: rgba(228, 232, 238, 0.86);
+  --btn-fg: #f7f4f0;
+  --axis: rgba(16, 20, 28, 0.18);
+  --scan: rgba(200, 50, 40, 0.45);
+  --grain: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+.dark {
+  --background: #0e1218;
+  --foreground: #e8ecf2;
+  --muted: #8b95a5;
+  --card: #161c26;
+  --card-border: rgba(232, 236, 242, 0.1);
+  --accent: #e04a3c;
+  --accent-bright: #ff6b5c;
+  --accent-soft: rgba(224, 74, 60, 0.14);
+  --navy: #121820;
+  --navy-deep: #07090d;
+  --surface: #141a24;
+  --steel: #7a9bb8;
+  --ink-soft: #c5ced9;
+  --glow: rgba(224, 74, 60, 0.2);
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, 0.04);
+  --shadow-card-hover: 0 16px 40px -24px rgba(0, 0, 0, 0.7);
+  --hero-gradient:
+    linear-gradient(165deg, #0a0e14 0%, #121820 42%, #0e1218 100%);
+  --cta-gradient: linear-gradient(135deg, #07090d 0%, #1a2332 50%, #3d5a73 100%);
+  --header-bg: rgba(14, 18, 24, 0.88);
+  --btn-fg: #0e1218;
+  --axis: rgba(232, 236, 242, 0.14);
+  --scan: rgba(224, 74, 60, 0.55);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-accent: var(--accent);
+  --color-accent-bright: var(--accent-bright);
+  --color-accent-soft: var(--accent-soft);
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-surface: var(--surface);
+  --color-steel: var(--steel);
+  --color-ink-soft: var(--ink-soft);
+  --color-glow: var(--glow);
+  --color-btn-fg: var(--btn-fg);
+  --font-sans: var(--font-vazirmatn);
+  --font-latin: var(--font-syne);
+  --font-mono: var(--font-jetbrains);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-vazirmatn), Tahoma, system-ui, sans-serif;
+  letter-spacing: -0.01em;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  opacity: 0.035;
+  background-image: var(--grain);
+  mix-blend-mode: multiply;
+}
+
+.dark body::before {
+  opacity: 0.06;
+  mix-blend-mode: soft-light;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--accent) 40%, transparent);
+  color: var(--foreground);
+}
+
+.font-display {
+  font-family: var(--font-vazirmatn), Tahoma, system-ui, sans-serif;
+  letter-spacing: -0.025em;
+  line-height: 1.4;
+}
+
+.font-latin {
+  font-family: var(--font-syne), var(--font-vazirmatn), system-ui, sans-serif;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+}
+
+.font-mono-signal {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+  letter-spacing: 0.04em;
+}
+
+.hero-bg {
+  background: var(--hero-gradient);
+}
+
+.cta-bg {
+  background: var(--cta-gradient);
+}
+
+/* Sharp panel — not a soft glass card */
+.signal-panel {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-card);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%);
+  transition:
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    box-shadow 0.35s ease;
+}
+
+.signal-panel:hover {
+  transform: translateY(-4px);
+  border-color: color-mix(in oklab, var(--accent) 45%, var(--card-border));
+  box-shadow: var(--shadow-card-hover);
+}
+
+.axis-cut {
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 96% 100%, 0 100%);
+}
+
+.brand-monument {
+  font-family: var(--font-syne), var(--font-vazirmatn), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.gradient-text {
+  color: var(--foreground);
+}
+
+/* Permanent vertical axis through the site */
+.axis-rail {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  inset-inline-start: max(1rem, calc(50% - 40rem));
+  width: 1px;
+  z-index: 40;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    var(--axis) 8%,
+    var(--axis) 92%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.axis-rail::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 3px;
+  height: 64px;
+  transform: translateX(-50%);
+  background: var(--accent);
+  animation: axis-pulse 4.5s ease-in-out infinite;
+}
+
+@keyframes axis-pulse {
+  0%,
+  100% {
+    top: 12%;
+    opacity: 0.35;
+  }
+  50% {
+    top: 72%;
+    opacity: 1;
+  }
+}
+
+@keyframes signal-sweep {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+.signal-sweep {
+  animation: signal-sweep 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  animation: ticker 38s linear infinite;
+}
+
+@keyframes draw-in {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-draw {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: draw-in 1.8s ease forwards;
+}
+
+@keyframes rise-soft {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .axis-rail::before,
+  .signal-sweep,
+  .ticker-track {
+    animation: none;
+  }
+}
