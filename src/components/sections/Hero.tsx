@@ -72,6 +72,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.22 }}
         >
+      
           <Button href="/contact">{t("ctaPrimary")}</Button>
           <Button href="/services" variant="secondary">
             {t("ctaSecondary")}
