@@ -1,0 +1,323 @@
+{
+  "Meta": {
+    "tagline": "AI Services | Design & Implementation of AI Solutions",
+    "description": "Specialized AI services in content creation, chatbots, CRM, healthcare, education, real estate, cybersecurity, data extraction, and business automation.",
+    "nameFa": "Axyno AI"
+  },
+  "Nav": {
+    "home": "Home",
+    "services": "Services",
+    "solutions": "Solutions",
+    "about": "About",
+    "projects": "Projects",
+    "contact": "Contact",
+    "consult": "Consult",
+    "consultFull": "Get a consultation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "Footer": {
+    "blurb": "Designing and implementing AI solutions on the real axis of your business.",
+    "services": "Services",
+    "solutions": "Solutions",
+    "company": "Company",
+    "contact": "Contact",
+    "rights": "ALL RIGHTS RESERVED",
+    "serviceLabels": {
+      "ai-content": "Content",
+      "ai-chatbot": "Chatbot",
+      "ai-crm": "CRM",
+      "ai-extraction": "Data Extraction",
+      "ai-healthcare": "Healthcare",
+      "ai-education": "Education",
+      "ai-real-estate": "Real Estate",
+      "ai-cybersecurity": "Cybersecurity"
+    },
+    "solutionLabels": {
+      "automation": "AI Automation",
+      "assistant": "AI Assistant",
+      "chatbot": "AI Chatbot",
+      "crm": "AI CRM",
+      "extraction": "Intelligent Data Extraction"
+    }
+  },
+  "Hero": {
+    "eyebrow": "SIG · 01 / INTELLIGENCE ON AXIS",
+    "nameFa": "Axyno AI",
+    "subtitle": "Put AI on the axis of your business — from idea to a live system.",
+    "ctaPrimary": "Free consultation",
+    "ctaSecondary": "View services"
+  },
+  "AboutBrief": {
+    "eyebrow": "SIG · 02 / ABOUT",
+    "title": "Specialists in turning AI into real solutions",
+    "subtitle": "We combine deep expertise, delivery experience, and modern AI to design and implement intelligent solutions that help businesses work faster, more accurately, and smarter.",
+    "features": {
+      "expertise": {
+        "title": "Expertise",
+        "description": "Mastery of modern AI technologies and tools"
+      },
+      "experience": {
+        "title": "Experience",
+        "description": "Hands-on design and delivery of real business solutions"
+      },
+      "team": {
+        "title": "Pro team",
+        "description": "A mix of engineering, product, and AI specialists"
+      }
+    }
+  },
+  "Services": {
+    "eyebrow": "SIG · 03 / SERVICES",
+    "title": "AI services for businesses",
+    "subtitle": "Intelligent solutions tailored to your needs, processes, and industry",
+    "viewAll": "View all services",
+    "viewSolution": "View solution",
+    "pageTitle": "AI Services",
+    "pageDescription": "Specialized AI services including content, chatbots, CRM, healthcare, education, real estate, cybersecurity, and data extraction.",
+    "consult": "Get a consultation",
+    "allServices": "All services",
+    "notFound": "Service not found",
+    "detailEyebrow": "SERVICE DETAIL",
+    "items": {
+      "ai-content": {
+        "title": "AI for content creation",
+        "short": "Create, manage, and optimize text, image, and video content with AI.",
+        "description": "We combine language models with image and video tools to make content production faster, more cohesive, and on-brand — from idea to publish."
+      },
+      "ai-project-management": {
+        "title": "AI for project management",
+        "short": "Smarter project workflows, task analysis, reporting, and decision support.",
+        "description": "We build systems that analyze project status, suggest priorities, and produce decision-ready reports for leaders."
+      },
+      "ai-chatbot": {
+        "title": "AI chatbots",
+        "short": "Design and ship smart chatbots for support, sales, and customer engagement.",
+        "description": "Chatbots connected to your organizational knowledge that answer accurately and elevate support across web, apps, and messengers."
+      },
+      "ai-healthcare": {
+        "title": "AI in healthcare",
+        "short": "Intelligent solutions for analysis, process management, and care delivery support.",
+        "description": "Smart solutions for clinics and health organizations: data analysis, process optimization, and assistive agents — with accuracy, security, and privacy."
+      },
+      "ai-education": {
+        "title": "AI in education",
+        "short": "Smarter learning, educational content, performance analysis, and teaching assistants.",
+        "description": "From personalized tutors to learner analytics and content generation — making learning smarter and measurable."
+      },
+      "telegram-bot": {
+        "title": "Telegram bot design",
+        "short": "Smart Telegram bots for sales, support, notifications, automation, and engagement.",
+        "description": "Intelligent Telegram bots for sales, support, alerts, and process automation — connected to your CRM, payments, and internal systems."
+      },
+      "ai-real-estate": {
+        "title": "AI in real estate",
+        "short": "Property analysis, smart recommendations, classification, search, and process automation.",
+        "description": "Smart property search, need-matched recommendations, classification, and follow-up automation — for agencies and real-estate platforms."
+      },
+      "ai-cybersecurity": {
+        "title": "AI in cybersecurity",
+        "short": "Use AI to analyze data, spot suspicious patterns, and strengthen system security.",
+        "description": "Suspicious-pattern analysis, smart alerts, and faster response support — complementing your existing security processes."
+      },
+      "ai-crm": {
+        "title": "AI in CRM",
+        "short": "Smarter CRM, customer analysis, behavior prediction, and better relationships.",
+        "description": "Customer behavior analysis, lead scoring, need prediction, and next-best-action suggestions — turning your CRM into a growth engine."
+      },
+      "ai-retail": {
+        "title": "AI for retail",
+        "short": "Smarter stores, product recommendations, customer analysis, sales and support automation.",
+        "description": "Product recommendations, personalized shopping, support automation, and sales analytics — for online and omnichannel retail."
+      },
+      "ai-extraction": {
+        "title": "AI data extraction",
+        "short": "Extract, classify, and process information from documents, files, images, and more.",
+        "description": "From PDFs and images to emails and forms — we extract, structure, and inject data into your systems."
+      },
+      "ai-legal": {
+        "title": "AI for legal work",
+        "short": "Legal document analysis, smart search, classification, and process support.",
+        "description": "Smart document search, contract classification, and legal workflow support — with confidentiality and human control."
+      }
+    }
+  },
+  "WhyUs": {
+    "eyebrow": "SIG · 04 / WHY",
+    "title": "Why businesses choose us for intelligent transformation",
+    "items": {
+      "tailored": {
+        "title": "Business-fit solutions",
+        "description": "We design AI solutions around the real needs of each business."
+      },
+      "modern": {
+        "title": "Modern technology",
+        "description": "We use the latest AI tools and technologies."
+      },
+      "results": {
+        "title": "Results-focused",
+        "description": "Our goal is not AI for its own sake — it is measurable business outcomes."
+      },
+      "scalable": {
+        "title": "Built to scale",
+        "description": "Solutions are designed so they can grow and evolve over time."
+      },
+      "security": {
+        "title": "Security & privacy",
+        "description": "Data security and confidentiality are built into every solution."
+      },
+      "support": {
+        "title": "Ongoing partnership",
+        "description": "We stay with you from idea through delivery and continued growth."
+      }
+    }
+  },
+  "Process": {
+    "eyebrow": "SIG · 05 / PROCESS",
+    "title": "From idea to an intelligent solution",
+    "steps": {
+      "01": {
+        "title": "Discover",
+        "description": "Understand the business, challenges, and needs"
+      },
+      "02": {
+        "title": "Analyze",
+        "description": "Analyze processes and find AI opportunities"
+      },
+      "03": {
+        "title": "Design",
+        "description": "Design architecture and a fit-for-purpose solution"
+      },
+      "04": {
+        "title": "Build",
+        "description": "Implement and connect the solution to existing systems"
+      },
+      "05": {
+        "title": "Test & optimize",
+        "description": "Measure performance and refine the system"
+      },
+      "06": {
+        "title": "Deploy & support",
+        "description": "Final deployment with ongoing support and growth"
+      }
+    }
+  },
+  "Industries": {
+    "eyebrow": "SIG · 06 / INDUSTRIES",
+    "title": "AI is not limited to one industry",
+    "items": [
+      "Healthcare",
+      "Education",
+      "Real estate",
+      "Sales & marketing",
+      "Retail",
+      "CRM",
+      "Enterprise services",
+      "Legal",
+      "Security",
+      "Content",
+      "Automation",
+      "Customer service"
+    ]
+  },
+  "Solutions": {
+    "eyebrow": "SIG · 07 / SOLUTIONS",
+    "title": "Solutions we can build for your business",
+    "subtitle": "From idea to delivery — conceptual, scalable solutions for real needs",
+    "details": "Details",
+    "viewAll": "All solutions",
+    "pageTitle": "AI Solutions",
+    "pageDescription": "Sample AI solutions including enterprise assistants, chatbots, document extraction, smart CRM, and process automation.",
+    "items": {
+      "enterprise-assistant": {
+        "title": "Enterprise AI assistant",
+        "description": "An internal assistant for company Q&A, knowledge access, and faster everyday work."
+      },
+      "smart-chatbot": {
+        "title": "Smart chatbot",
+        "description": "24/7 customer engagement across channels with context and your brand knowledge."
+      },
+      "doc-extraction": {
+        "title": "Document information extraction",
+        "description": "Turn unstructured documents and files into usable organizational data."
+      },
+      "smart-recommend": {
+        "title": "Smart recommendation system",
+        "description": "Recommend products, content, or next actions based on user behavior and needs."
+      },
+      "ai-crm": {
+        "title": "AI CRM",
+        "description": "Customer analysis, behavior prediction, and smarter sales and support follow-ups."
+      },
+      "process-automation": {
+        "title": "Enterprise process automation",
+        "description": "Remove repetitive work and connect systems with controllable smart flows."
+      },
+      "data-analytics": {
+        "title": "Data analytics system",
+        "description": "Turn raw data into actionable insight for leaders and operations teams."
+      },
+      "sales-assistant": {
+        "title": "Smart sales assistant",
+        "description": "Help sales teams follow leads, suggest replies, and prioritize opportunities."
+      },
+      "support-assistant": {
+        "title": "Smart support assistant",
+        "description": "Faster ticket replies, solution suggestions, and less load on support teams."
+      }
+    }
+  },
+  "FinalCTA": {
+    "eyebrow": "SIG · 08 / NEXT",
+    "title": "Ready to make your business smarter?",
+    "subtitle": "If you have an idea for using AI in your business, talk to us. We will review your needs and recommend the best path.",
+    "ctaPrimary": "Start a specialist conversation",
+    "ctaSecondary": "Get a consultation"
+  },
+  "About": {
+    "pageTitle": "About us",
+    "pageDescription": "About AxynoAI — a specialist team designing and delivering AI solutions for businesses.",
+    "eyebrow": "SIG · ABOUT",
+    "title": "Specialists in turning AI into real solutions",
+    "subtitle": "We combine deep expertise, delivery experience, and modern AI to design and implement intelligent solutions that help businesses work faster, more accurately, and smarter.",
+    "body": "AxynoAI is a specialist team in artificial intelligence, automation, intelligent systems, and AI delivery for organizations and businesses. We focus on trust, expertise, and measurable results.",
+    "principlesEyebrow": "SIG · PRINCIPLES",
+    "principlesTitle": "How we work together"
+  },
+  "Contact": {
+    "pageTitle": "Contact us",
+    "pageDescription": "Get a free consultation from AxynoAI — direct phone and email.",
+    "eyebrow": "SIG · CONTACT",
+    "title": "Start a specialist conversation",
+    "subtitle": "Share your idea or need; we will review it briefly and suggest the right path.",
+    "name": "Full name",
+    "namePlaceholder": "e.g. Hamed ...",
+    "contactField": "Email or phone",
+    "contactPlaceholder": "Email or mobile",
+    "message": "Message",
+    "messagePlaceholder": "Tell us about your need or idea...",
+    "submit": "Send consultation request",
+    "error": "Please fill in all fields.",
+    "sent": "Opening your email client... If it does not open, message {email}.",
+    "mailSubject": "Consultation request from {name}",
+    "mailBody": "Name: {name}\nContact: {contact}\n\nMessage:\n{message}"
+  },
+  "Projects": {
+    "pageTitle": "Projects & sample solutions",
+    "pageDescription": "Conceptual AI solution samples we can implement for your business.",
+    "eyebrow": "SIG · PROJECTS",
+    "title": "Sample solutions & concept projects",
+    "subtitle": "Until real case studies are published, the samples below show the kinds of solutions we build."
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "subtitle": "This path does not exist on the site axis.",
+    "home": "Back to home",
+    "contact": "Contact us"
+  },
+  "Lang": {
+    "fa": "FA",
+    "en": "EN",
+    "label": "Language"
+  }
+}

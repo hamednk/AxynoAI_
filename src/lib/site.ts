@@ -1,45 +1,41 @@
 export const site = {
   name: "AxynoAI",
-  nameFa: "اکسینو AI",
-  tagline: "خدمات هوش مصنوعی | طراحی و پیاده‌سازی راهکارهای AI",
-  description:
-    "ارائه خدمات تخصصی هوش مصنوعی در تولید محتوا، چت‌بات، CRM، پزشکی، آموزش، املاک، امنیت سایبری، استخراج اطلاعات و اتوماسیون کسب‌وکار.",
   phone: "+989127274655",
   phoneDisplay: "+98 912 727 4655",
   email: "info@AxynoAI.com",
-  logo: "/logo.jpg",
+  logo: "/logo.png",
 } as const;
 
-export const navLinks = [
-  { href: "/", label: "صفحه اصلی" },
-  { href: "/services", label: "خدمات" },
-  { href: "/solutions", label: "راهکارها" },
-  { href: "/about", label: "درباره ما" },
-  { href: "/projects", label: "پروژه‌ها" },
-  { href: "/contact", label: "تماس با ما" },
+export const navHrefs = [
+  { href: "/", key: "home" },
+  { href: "/services", key: "services" },
+  { href: "/solutions", key: "solutions" },
+  { href: "/about", key: "about" },
+  { href: "/projects", key: "projects" },
+  { href: "/contact", key: "contact" },
 ] as const;
 
-export const footerServices = [
-  { href: "/services/ai-content", label: "تولید محتوا" },
-  { href: "/services/ai-chatbot", label: "چت‌بات" },
-  { href: "/services/ai-crm", label: "CRM" },
-  { href: "/services/ai-extraction", label: "استخراج اطلاعات" },
-  { href: "/services/ai-healthcare", label: "پزشکی" },
-  { href: "/services/ai-education", label: "آموزش" },
-  { href: "/services/ai-real-estate", label: "املاک" },
-  { href: "/services/ai-cybersecurity", label: "امنیت سایبری" },
+export const footerServiceHrefs = [
+  { href: "/services/ai-content", key: "ai-content" },
+  { href: "/services/ai-chatbot", key: "ai-chatbot" },
+  { href: "/services/ai-crm", key: "ai-crm" },
+  { href: "/services/ai-extraction", key: "ai-extraction" },
+  { href: "/services/ai-healthcare", key: "ai-healthcare" },
+  { href: "/services/ai-education", key: "ai-education" },
+  { href: "/services/ai-real-estate", key: "ai-real-estate" },
+  { href: "/services/ai-cybersecurity", key: "ai-cybersecurity" },
 ] as const;
 
-export const footerSolutions = [
-  { href: "/solutions", label: "AI Automation" },
-  { href: "/solutions", label: "AI Assistant" },
-  { href: "/solutions", label: "AI Chatbot" },
-  { href: "/solutions", label: "AI CRM" },
-  { href: "/solutions", label: "Intelligent Data Extraction" },
+export const footerSolutionKeys = [
+  "automation",
+  "assistant",
+  "chatbot",
+  "crm",
+  "extraction",
 ] as const;
 
-export const footerCompany = [
-  { href: "/about", label: "درباره ما" },
-  { href: "/projects", label: "پروژه‌ها" },
-  { href: "/contact", label: "تماس با ما" },
+export const footerCompanyHrefs = [
+  { href: "/about", key: "about" },
+  { href: "/projects", key: "projects" },
+  { href: "/contact", key: "contact" },
 ] as const;

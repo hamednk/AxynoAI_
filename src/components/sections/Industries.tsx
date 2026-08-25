@@ -1,18 +1,17 @@
-import { industries } from "@/lib/content";
+import { getTranslations } from "next-intl/server";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FadeIn } from "@/components/ui/FadeIn";
 
-export function Industries() {
-  const loop = [...industries, ...industries];
+export async function Industries() {
+  const t = await getTranslations("Industries");
+  const items = t.raw("items") as string[];
+  const loop = [...items, ...items];
 
   return (
     <section className="overflow-hidden py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <FadeIn>
-          <SectionHeading
-            eyebrow="SIG · 06 / INDUSTRIES"
-            title="هوش مصنوعی محدود به یک صنعت نیست"
-          />
+          <SectionHeading eyebrow={t("eyebrow")} title={t("title")} />
         </FadeIn>
       </div>
 

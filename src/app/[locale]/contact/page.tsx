@@ -1,23 +1,31 @@
 import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Mail, Phone } from "lucide-react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "تماس با ما",
-  description: `دریافت مشاوره رایگان از ${site.nameFa} — تماس و ایمیل مستقیم.`,
-};
+type Props = { params: Promise<{ locale: string }> };
 
-export default function ContactPage() {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Contact" });
+  return { title: t("pageTitle"), description: t("pageDescription") };
+}
+
+export default async function ContactPage({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("Contact");
+
   return (
     <section className="hero-bg">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 pt-28 pb-16 sm:px-6 lg:grid-cols-2 lg:px-8 lg:pb-20">
         <div>
           <SectionHeading
-            eyebrow="SIG · CONTACT"
-            title="شروع یک گفت‌وگوی تخصصی"
-            subtitle="ایده یا نیازتان را بگویید؛ کوتاه بررسی می‌کنیم و مسیر مناسب را پیشنهاد می‌دهیم."
+            eyebrow={t("eyebrow")}
+            title={t("title")}
+            subtitle={t("subtitle")}
             align="start"
           />
           <div className="space-y-3">

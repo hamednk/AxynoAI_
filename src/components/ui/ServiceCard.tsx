@@ -1,9 +1,19 @@
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import type { Service } from "@/lib/services";
+import { Link } from "@/i18n/navigation";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import type { ServiceMeta } from "@/lib/services";
 import { AppIcon } from "@/lib/icons";
 
-export function ServiceCard({ service }: { service: Service }) {
+export function ServiceCard({
+  service,
+  title,
+  short,
+  viewLabel,
+}: {
+  service: ServiceMeta;
+  title: string;
+  short: string;
+  viewLabel: string;
+}) {
   return (
     <article className="signal-panel group flex h-full flex-col p-6">
       <div className="mb-5 flex items-start justify-between gap-3">
@@ -14,14 +24,15 @@ export function ServiceCard({ service }: { service: Service }) {
           OPEN
         </span>
       </div>
-      <h3 className="mb-2 text-lg font-bold leading-7">{service.title}</h3>
-      <p className="mb-5 flex-1 text-sm leading-7 text-muted">{service.short}</p>
+      <h3 className="mb-2 text-lg font-bold leading-7">{title}</h3>
+      <p className="mb-5 flex-1 text-sm leading-7 text-muted">{short}</p>
       <Link
         href={`/services/${service.slug}`}
         className="inline-flex items-center gap-2 text-sm font-medium text-accent transition hover:gap-3 hover:text-accent-bright"
       >
-        مشاهده راهکار
-        <ArrowLeft className="size-4" />
+        {viewLabel}
+        <ArrowLeft className="hidden size-4 rtl:inline" />
+        <ArrowRight className="size-4 rtl:hidden" />
       </Link>
     </article>
   );

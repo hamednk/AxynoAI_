@@ -1,10 +1,11 @@
-import { services } from "@/lib/services";
+import { getTranslations } from "next-intl/server";
+import { serviceMetas } from "@/lib/services";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ServiceCard } from "@/components/ui/ServiceCard";
 import { FadeIn } from "@/components/ui/FadeIn";
 import { Button } from "@/components/ui/Button";
 
-export function ServicesGrid({
+export async function ServicesGrid({
   limit,
   showAllLink = false,
   hideHeading = false,
@@ -13,7 +14,8 @@ export function ServicesGrid({
   showAllLink?: boolean;
   hideHeading?: boolean;
 }) {
-  const list = limit ? services.slice(0, limit) : services;
+  const t = await getTranslations("Services");
+  const list = limit ? serviceMetas.slice(0, limit) : serviceMetas;
 
   return (
     <section id="services" className="relative overflow-hidden bg-surface py-24">
@@ -25,23 +27,28 @@ export function ServicesGrid({
         {!hideHeading ? (
           <FadeIn>
             <SectionHeading
-              eyebrow="SIG · 03 / SERVICES"
-              title="خدمات هوش مصنوعی برای کسب‌وکارها"
-              subtitle="راهکارهای هوشمند متناسب با نیاز، فرآیند و صنعت شما"
+              eyebrow={t("eyebrow")}
+              title={t("title")}
+              subtitle={t("subtitle")}
             />
           </FadeIn>
         ) : null}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((service, i) => (
             <FadeIn key={service.slug} delay={(i % 3) * 0.06}>
-              <ServiceCard service={service} />
+              <ServiceCard
+                service={service}
+                title={t(`items.${service.slug}.title`)}
+                short={t(`items.${service.slug}.short`)}
+                viewLabel={t("viewSolution")}
+              />
             </FadeIn>
           ))}
         </div>
         {showAllLink ? (
           <div className="mt-12 flex justify-start">
             <Button href="/services" variant="secondary">
-              مشاهده همه خدمات
+              {t("viewAll")}
             </Button>
           </div>
         ) : null}

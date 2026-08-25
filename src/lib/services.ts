@@ -1,110 +1,23 @@
-export type Service = {
+export type ServiceMeta = {
   slug: string;
-  title: string;
-  short: string;
-  description: string;
   icon: string;
 };
 
-export const services: Service[] = [
-  {
-    slug: "ai-content",
-    title: "هوش مصنوعی در تولید محتوا",
-    short: "تولید، مدیریت و بهینه‌سازی محتوای متنی، تصویری و ویدیویی با استفاده از هوش مصنوعی.",
-    description:
-      "با ترکیب مدل‌های زبانی و ابزارهای تولید تصویر و ویدیو، فرآیند تولید محتوا را سریع‌تر، یکپارچه‌تر و متناسب با برند شما طراحی می‌کنیم — از ایده تا انتشار.",
-    icon: "PenTool",
-  },
-  {
-    slug: "ai-project-management",
-    title: "هوش مصنوعی در مدیریت پروژه",
-    short: "هوشمندسازی فرآیندهای مدیریت پروژه، تحلیل وظایف، گزارش‌گیری و کمک به تصمیم‌گیری.",
-    description:
-      "سیستم‌هایی می‌سازیم که وضعیت پروژه را تحلیل می‌کنند، اولویت‌ها را پیشنهاد می‌دهند و گزارش‌های تصمیم‌محور برای مدیران تولید می‌کنند.",
-    icon: "Kanban",
-  },
-  {
-    slug: "ai-chatbot",
-    title: "هوش مصنوعی در چت‌بات",
-    short: "طراحی و پیاده‌سازی چت‌بات‌های هوشمند برای پاسخ‌گویی، پشتیبانی و تعامل با مشتریان.",
-    description:
-      "چت‌بات‌هایی طراحی می‌کنیم که به دانش سازمانی شما متصل‌اند، پاسخ دقیق می‌دهند و تجربه پشتیبانی را در وب، اپ و پیام‌رسان‌ها ارتقا می‌دهند.",
-    icon: "MessageSquare",
-  },
-  {
-    slug: "ai-healthcare",
-    title: "هوش مصنوعی در پزشکی",
-    short: "طراحی راهکارهای هوشمند برای تحلیل اطلاعات، مدیریت فرآیندها و کمک به ارائه خدمات پزشکی.",
-    description:
-      "راهکارهای هوشمند برای کلینیک‌ها و سازمان‌های سلامت: تحلیل داده‌ها، بهینه‌سازی فرآیندها و دستیارهای کمکی — با تاکید بر دقت، امنیت و محرمانگی.",
-    icon: "HeartPulse",
-  },
-  {
-    slug: "ai-education",
-    title: "هوش مصنوعی در آموزش و پرورش",
-    short: "هوشمندسازی آموزش، تولید محتوای آموزشی، تحلیل عملکرد و ایجاد دستیارهای آموزشی.",
-    description:
-      "از دستیارهای آموزشی شخصی‌سازی‌شده تا تحلیل پیشرفت یادگیرنده و تولید محتوای آموزشی — یادگیری را هوشمندتر و قابل اندازه‌گیری می‌کنیم.",
-    icon: "GraduationCap",
-  },
-  {
-    slug: "telegram-bot",
-    title: "طراحی ربات تلگرام",
-    short: "طراحی ربات‌های هوشمند تلگرام برای فروش، پشتیبانی، اطلاع‌رسانی، اتوماسیون و تعامل با کاربران.",
-    description:
-      "ربات‌های تلگرام هوشمند برای فروش، پشتیبانی، اطلاع‌رسانی و اتوماسیون فرآیندها — متصل به CRM، پرداخت و سیستم‌های داخلی شما.",
-    icon: "Send",
-  },
-  {
-    slug: "ai-real-estate",
-    title: "هوش مصنوعی در املاک",
-    short: "تحلیل اطلاعات املاک، پیشنهاد هوشمند، دسته‌بندی و جستجوی هوشمند و اتوماسیون فرآیندهای حوزه املاک.",
-    description:
-      "جستجوی هوشمند ملک، پیشنهاد متناسب با نیاز مشتری، دسته‌بندی و اتوماسیون پیگیری — برای آژانس‌ها و پلتفرم‌های املاک.",
-    icon: "Building2",
-  },
-  {
-    slug: "ai-cybersecurity",
-    title: "هوش مصنوعی در امنیت سایبری",
-    short: "استفاده از AI برای تحلیل داده‌ها، شناسایی الگوهای مشکوک و کمک به افزایش امنیت سیستم‌ها.",
-    description:
-      "تحلیل الگوهای مشکوک، هشدار هوشمند و کمک به تیم امنیت برای واکنش سریع‌تر — مکمل فرآیندهای امنیتی موجود شما.",
-    icon: "Shield",
-  },
-  {
-    slug: "ai-crm",
-    title: "هوش مصنوعی در CRM",
-    short: "هوشمندسازی CRM، تحلیل مشتریان، پیش‌بینی رفتار و بهبود ارتباط با مشتری.",
-    description:
-      "تحلیل رفتار مشتری، امتیازدهی سرنخ، پیش‌بینی نیاز و پیشنهاد اقدام بعدی — CRM شما را به موتور رشد تبدیل می‌کنیم.",
-    icon: "Users",
-  },
-  {
-    slug: "ai-retail",
-    title: "هوش مصنوعی در حوزه فروشگاهی",
-    short: "هوشمندسازی فروشگاه‌ها، پیشنهاد محصول، تحلیل مشتری، اتوماسیون فروش و پشتیبانی.",
-    description:
-      "پیشنهاد محصول، شخصی‌سازی تجربه خرید، اتوماسیون پشتیبانی و تحلیل فروش — برای فروشگاه‌های آنلاین و چندکاناله.",
-    icon: "ShoppingBag",
-  },
-  {
-    slug: "ai-extraction",
-    title: "استخراج اطلاعات با هوش مصنوعی",
-    short: "استخراج، دسته‌بندی و پردازش اطلاعات از اسناد، فایل‌ها، تصاویر و منابع مختلف.",
-    description:
-      "از PDF و تصویر تا ایمیل و فرم‌ها — اطلاعات را استخراج، ساختاردهی و به سیستم‌های شما تزریق می‌کنیم.",
-    icon: "FileSearch",
-  },
-  {
-    slug: "ai-legal",
-    title: "هوش مصنوعی در امور حقوقی",
-    short: "تحلیل و پردازش اسناد حقوقی، جستجوی هوشمند، دسته‌بندی اطلاعات و کمک به فرآیندهای حقوقی.",
-    description:
-      "جستجوی هوشمند در اسناد، دسته‌بندی قراردادها و کمک به فرآیندهای حقوقی — با حفظ محرمانگی و کنترل انسانی.",
-    icon: "Scale",
-  },
+export const serviceMetas: ServiceMeta[] = [
+  { slug: "ai-content", icon: "PenTool" },
+  { slug: "ai-project-management", icon: "Kanban" },
+  { slug: "ai-chatbot", icon: "MessageSquare" },
+  { slug: "ai-healthcare", icon: "HeartPulse" },
+  { slug: "ai-education", icon: "GraduationCap" },
+  { slug: "telegram-bot", icon: "Send" },
+  { slug: "ai-real-estate", icon: "Building2" },
+  { slug: "ai-cybersecurity", icon: "Shield" },
+  { slug: "ai-crm", icon: "Users" },
+  { slug: "ai-retail", icon: "ShoppingBag" },
+  { slug: "ai-extraction", icon: "FileSearch" },
+  { slug: "ai-legal", icon: "Scale" },
 ];
 
-export function getServiceBySlug(slug: string): Service | undefined {
-  return services.find((s) => s.slug === slug);
+export function getServiceMetaBySlug(slug: string): ServiceMeta | undefined {
+  return serviceMetas.find((s) => s.slug === slug);
 }

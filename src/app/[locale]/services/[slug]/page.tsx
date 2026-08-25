@@ -1,29 +1,36 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getServiceBySlug, services } from "@/lib/services";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getServiceMetaBySlug, serviceMetas } from "@/lib/services";
 import { AppIcon } from "@/lib/icons";
 import { Button } from "@/components/ui/Button";
 import { FinalCTA } from "@/components/sections/FinalCTA";
+import { routing } from "@/i18n/routing";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export function generateStaticParams() {
-  return services.map((s) => ({ slug: s.slug }));
+  return routing.locales.flatMap((locale) =>
+    serviceMetas.map((s) => ({ locale, slug: s.slug })),
+  );
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
-  const service = getServiceBySlug(slug);
-  if (!service) return { title: "خدمت یافت نشد" };
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "Services" });
+  const meta = getServiceMetaBySlug(slug);
+  if (!meta) return { title: t("notFound") };
   return {
-    title: service.title,
-    description: service.short,
+    title: t(`items.${slug}.title`),
+    description: t(`items.${slug}.short`),
   };
 }
 
 export default async function ServiceDetailPage({ params }: Props) {
-  const { slug } = await params;
-  const service = getServiceBySlug(slug);
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
+  const t = await getTranslations("Services");
+  const service = getServiceMetaBySlug(slug);
   if (!service) notFound();
 
   return (
@@ -34,19 +41,21 @@ export default async function ServiceDetailPage({ params }: Props) {
             <AppIcon name={service.icon} className="size-7" strokeWidth={1.5} />
           </div>
           <p className="font-mono-signal mb-3 text-[10px] tracking-[0.2em] text-steel uppercase">
-            SERVICE DETAIL
+            {t("detailEyebrow")}
           </p>
           <h1 className="font-display text-3xl font-extrabold text-balance sm:text-4xl">
-            {service.title}
+            {t(`items.${slug}.title`)}
           </h1>
-          <p className="mt-4 text-lg leading-8 text-muted">{service.short}</p>
+          <p className="mt-4 text-lg leading-8 text-muted">
+            {t(`items.${slug}.short`)}
+          </p>
           <p className="mt-6 text-base leading-8 text-foreground/90">
-            {service.description}
+            {t(`items.${slug}.description`)}
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button href="/contact">دریافت مشاوره</Button>
+            <Button href="/contact">{t("consult")}</Button>
             <Button href="/services" variant="secondary">
-              همه خدمات
+              {t("allServices")}
             </Button>
           </div>
         </div>

@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { site } from "@/lib/site";
 
 export function ContactForm() {
+  const t = useTranslations("Contact");
   const [name, setName] = useState("");
   const [contact, setContact] = useState("");
   const [message, setMessage] = useState("");
@@ -15,13 +17,13 @@ export function ContactForm() {
     e.preventDefault();
     setError("");
     if (!name.trim() || !contact.trim() || !message.trim()) {
-      setError("لطفاً همه فیلدها را تکمیل کنید.");
+      setError(t("error"));
       return;
     }
 
-    const subject = encodeURIComponent(`درخواست مشاوره از ${name}`);
+    const subject = encodeURIComponent(t("mailSubject", { name }));
     const body = encodeURIComponent(
-      `نام: ${name}\nراه ارتباط: ${contact}\n\nپیام:\n${message}`,
+      t("mailBody", { name, contact, message }),
     );
     window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`;
     setSent(true);
@@ -31,32 +33,32 @@ export function ContactForm() {
     <form onSubmit={onSubmit} className="signal-panel space-y-4 p-6 sm:p-8">
       <div>
         <label htmlFor="name" className="mb-1.5 block text-sm font-medium">
-          نام و نام خانوادگی
+          {t("name")}
         </label>
         <input
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           className="w-full border border-card-border bg-background/70 px-4 py-2.5 text-sm outline-none transition focus:border-accent"
-          placeholder="مثلاً حامد ..."
+          placeholder={t("namePlaceholder")}
         />
       </div>
       <div>
         <label htmlFor="contact" className="mb-1.5 block text-sm font-medium">
-          ایمیل یا شماره تماس
+          {t("contactField")}
         </label>
         <input
           id="contact"
           value={contact}
           onChange={(e) => setContact(e.target.value)}
           className="w-full border border-card-border bg-background/70 px-4 py-2.5 text-sm outline-none transition focus:border-accent"
-          placeholder="ایمیل یا موبایل"
+          placeholder={t("contactPlaceholder")}
           dir="ltr"
         />
       </div>
       <div>
         <label htmlFor="message" className="mb-1.5 block text-sm font-medium">
-          پیام
+          {t("message")}
         </label>
         <textarea
           id="message"
@@ -64,17 +66,15 @@ export function ContactForm() {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           className="w-full resize-y border border-card-border bg-background/70 px-4 py-2.5 text-sm outline-none transition focus:border-accent"
-          placeholder="درباره نیاز یا ایده خود بنویسید..."
+          placeholder={t("messagePlaceholder")}
         />
       </div>
       {error ? <p className="text-sm text-accent">{error}</p> : null}
       {sent ? (
-        <p className="text-sm text-steel">
-          در حال باز کردن ایمیل شما... اگر باز نشد، به {site.email} پیام دهید.
-        </p>
+        <p className="text-sm text-steel">{t("sent", { email: site.email })}</p>
       ) : null}
       <Button type="submit" className="w-full sm:w-auto">
-        ارسال درخواست مشاوره
+        {t("submit")}
       </Button>
     </form>
   );
