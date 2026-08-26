@@ -22,7 +22,7 @@ export default async function ProjectsPage({ params }: Props) {
 
   return (
     <>
-      <div className="hero-bg border-b border-card-border px-4 pt-28 pb-14 sm:px-6 lg:px-8">
+      <div className="hero-bg border-b border-card-border px-4 pt-24 pb-12 sm:px-6 sm:pt-28 sm:pb-14 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             eyebrow={t("eyebrow")}
@@ -37,7 +37,7 @@ export default async function ProjectsPage({ params }: Props) {
         <div className="space-y-3">
           {solutionMetas.map((item, i) => (
             <FadeIn key={item.slug} delay={(i % 4) * 0.04}>
-              <article className="group grid gap-4 border border-card-border bg-card p-5 sm:grid-cols-[4rem_1fr] sm:items-center sm:gap-6 sm:p-6">
+              <article className="group grid min-w-0 gap-4 border border-card-border bg-card p-4 sm:grid-cols-[4rem_minmax(0,1fr)] sm:items-center sm:gap-6 sm:p-6">
                 <div className="flex size-14 items-center justify-center border border-card-border text-accent transition group-hover:border-accent/40 group-hover:bg-accent-soft">
                   <AppIcon name={item.icon} className="size-6" strokeWidth={1.25} />
                 </div>

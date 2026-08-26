@@ -30,7 +30,7 @@ export function ContactForm() {
   };
 
   return (
-    <form onSubmit={onSubmit} className="signal-panel space-y-4 p-6 sm:p-8">
+    <form onSubmit={onSubmit} className="signal-panel min-w-0 space-y-4 p-5 sm:p-8">
       <div>
         <label htmlFor="name" className="mb-1.5 block text-sm font-medium">
           {t("name")}
@@ -39,7 +39,7 @@ export function ContactForm() {
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full border border-card-border bg-background/70 px-4 py-2.5 text-sm outline-none transition focus:border-accent"
+          className="w-full max-w-full min-w-0 border border-card-border bg-background/70 px-4 py-2.5 text-sm outline-none transition focus:border-accent"
           placeholder={t("namePlaceholder")}
         />
       </div>
@@ -51,7 +51,7 @@ export function ContactForm() {
           id="contact"
           value={contact}
           onChange={(e) => setContact(e.target.value)}
-          className="w-full border border-card-border bg-background/70 px-4 py-2.5 text-sm outline-none transition focus:border-accent"
+          className="w-full max-w-full min-w-0 border border-card-border bg-background/70 px-4 py-2.5 text-sm outline-none transition focus:border-accent"
           placeholder={t("contactPlaceholder")}
           dir="ltr"
         />
@@ -65,7 +65,7 @@ export function ContactForm() {
           rows={5}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          className="w-full resize-y border border-card-border bg-background/70 px-4 py-2.5 text-sm outline-none transition focus:border-accent"
+          className="w-full max-w-full min-w-0 resize-y border border-card-border bg-background/70 px-4 py-2.5 text-sm outline-none transition focus:border-accent"
           placeholder={t("messagePlaceholder")}
         />
       </div>

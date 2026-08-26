@@ -20,7 +20,7 @@ export default async function ContactPage({ params }: Props) {
 
   return (
     <section className="hero-bg">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 pt-28 pb-16 sm:px-6 lg:grid-cols-2 lg:px-8 lg:pb-20">
+      <div className="mx-auto grid max-w-7xl min-w-0 gap-10 px-4 pt-24 pb-16 sm:px-6 sm:pt-28 lg:grid-cols-2 lg:px-8 lg:pb-20">
         <div>
           <SectionHeading
             eyebrow={t("eyebrow")}

@@ -22,7 +22,7 @@ export default async function AboutPage({ params }: Props) {
 
   return (
     <>
-      <section className="hero-bg border-b border-card-border px-4 pt-28 pb-16 sm:px-6 lg:px-8">
+      <section className="hero-bg border-b border-card-border px-4 pt-24 pb-14 sm:px-6 sm:pt-28 sm:pb-16 lg:px-8">
         <div className="mx-auto max-w-3xl">
           <SectionHeading
             eyebrow={t("eyebrow")}
@@ -65,7 +65,7 @@ export default async function AboutPage({ params }: Props) {
             {whyUsKeys.map((key, i) => (
               <li
                 key={key}
-                className="grid gap-3 border-b border-card-border py-6 sm:grid-cols-[4rem_1fr_1.5fr]"
+                className="grid gap-3 border-b border-card-border py-6 sm:grid-cols-[4rem_minmax(0,1fr)_minmax(0,1.5fr)]"
               >
                 <span className="font-mono-signal text-sm text-accent">
                   {String(i + 1).padStart(2, "0")}

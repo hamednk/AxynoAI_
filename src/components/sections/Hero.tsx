@@ -21,17 +21,18 @@ export function Hero() {
         ) : null}
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-end px-4 pb-16 pt-28 sm:px-6 lg:justify-center lg:px-8 lg:pb-24 lg:pt-20">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl min-w-0 flex-col justify-end px-4 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-28 lg:justify-center lg:px-8 lg:pb-24 lg:pt-20">
         <motion.div
-          className="mb-5"
+          className="mb-4 sm:mb-5"
           initial={reduce ? false : { opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.55 }}
         >
+          <LogoMark size="hero" priority />
         </motion.div>
 
         <motion.p
-          className="font-mono-signal mb-4 text-[11px] text-steel"
+          className="font-mono-signal mb-3 text-[10px] text-steel sm:mb-4 sm:text-[11px]"
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -40,7 +41,7 @@ export function Hero() {
         </motion.p>
 
         <motion.h1
-          className="brand-hero-title text-[clamp(1.7rem,5vw,3.4rem)]"
+          className="brand-hero-title text-[clamp(1.35rem,7.2vw,3.4rem)]"
           initial={reduce ? false : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
@@ -49,7 +50,7 @@ export function Hero() {
         </motion.h1>
 
         <motion.p
-          className="mt-3 font-display text-lg font-bold text-ink-soft sm:text-xl"
+          className="mt-3 font-display text-base font-bold text-ink-soft sm:text-lg md:text-xl"
           initial={reduce ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.08 }}
@@ -58,7 +59,7 @@ export function Hero() {
         </motion.p>
 
         <motion.p
-          className="mt-5 max-w-lg text-base leading-8 text-muted sm:text-lg"
+          className="mt-4 max-w-lg text-sm leading-7 text-muted sm:mt-5 sm:text-base sm:leading-8 lg:text-lg"
           initial={reduce ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.14 }}
@@ -67,14 +68,15 @@ export function Hero() {
         </motion.p>
 
         <motion.div
-          className="mt-9 flex flex-wrap gap-3"
+          className="mt-7 flex w-full max-w-lg flex-col gap-3 sm:mt-9 sm:max-w-none sm:flex-row sm:flex-wrap"
           initial={reduce ? false : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.22 }}
         >
-      
-          <Button href="/contact">{t("ctaPrimary")}</Button>
-          <Button href="/services" variant="secondary">
+          <Button href="/contact" className="w-full sm:w-auto">
+            {t("ctaPrimary")}
+          </Button>
+          <Button href="/services" variant="secondary" className="w-full sm:w-auto">
             {t("ctaSecondary")}
           </Button>
         </motion.div>

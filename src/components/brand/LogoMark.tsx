@@ -9,10 +9,10 @@ type LogoMarkProps = {
 };
 
 const sizes = {
-  sm: { px: 36, className: "size-9" },
-  md: { px: 48, className: "size-12" },
-  lg: { px: 56, className: "size-14" },
-  hero: { px: 128, className: "size-24 sm:size-28 md:size-32" },
+  sm: { px: 36, className: "size-8 sm:size-9" },
+  md: { px: 48, className: "size-10 sm:size-12" },
+  lg: { px: 56, className: "size-9 sm:size-11 lg:size-14" },
+  hero: { px: 128, className: "size-16 sm:size-24 md:size-28 lg:size-32" },
 } as const;
 
 export function LogoMark({ size = "md", className, priority }: LogoMarkProps) {

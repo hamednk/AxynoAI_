@@ -8,7 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { AxisRail } from "@/components/layout/AxisRail";
 import { routing } from "@/i18n/routing";
 import { site } from "@/lib/site";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "../globals.css";
 
 const vazirmatn = Vazirmatn({
@@ -47,6 +47,12 @@ type Props = {
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export async function generateMetadata({
   params,
@@ -99,7 +105,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       className={`${vazirmatn.variable} ${syne.variable} ${michroma.variable} ${jetbrains.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="relative flex min-h-full flex-col font-sans antialiased">
+      <body className="relative flex min-h-full min-w-0 flex-col font-sans antialiased">
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <AxisRail />

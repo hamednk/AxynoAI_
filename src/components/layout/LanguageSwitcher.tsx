@@ -18,7 +18,7 @@ export function LanguageSwitcher() {
 
   return (
     <div
-      className="inline-flex items-center border border-card-border text-[11px] font-semibold"
+      className="inline-flex shrink-0 items-center border border-card-border text-[10px] font-semibold sm:text-[11px]"
       role="group"
       aria-label={t("label")}
     >
@@ -28,7 +28,7 @@ export function LanguageSwitcher() {
           type="button"
           onClick={() => switchTo(loc)}
           className={cn(
-            "px-2.5 py-1.5 transition",
+            "px-1.5 py-1 transition sm:px-2.5 sm:py-1.5",
             locale === loc
               ? "bg-accent text-btn-fg"
               : "text-muted hover:text-foreground",

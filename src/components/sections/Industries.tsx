@@ -8,14 +8,14 @@ export async function Industries() {
   const loop = [...items, ...items];
 
   return (
-    <section className="overflow-hidden py-24">
+    <section className="overflow-hidden py-14 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <FadeIn>
           <SectionHeading eyebrow={t("eyebrow")} title={t("title")} />
         </FadeIn>
       </div>
 
-      <div className="relative border-y border-card-border bg-card py-5">
+      <div className="relative overflow-hidden border-y border-card-border bg-card py-5">
         <div className="ticker-track flex w-max gap-0">
           {loop.map((name, i) => (
             <span

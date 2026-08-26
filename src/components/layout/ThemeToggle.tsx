@@ -13,7 +13,7 @@ export function ThemeToggle() {
   if (!mounted) {
     return (
       <span
-        className="inline-flex size-10 items-center justify-center border border-card-border"
+        className="inline-flex size-9 items-center justify-center border border-card-border sm:size-10"
         aria-hidden
       />
     );
@@ -25,7 +25,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="inline-flex size-10 items-center justify-center border border-card-border bg-card text-foreground transition hover:border-accent/40 hover:text-accent"
+      className="inline-flex size-9 items-center justify-center border border-card-border bg-card text-foreground transition hover:border-accent/40 hover:text-accent sm:size-10"
       aria-label={isDark ? "فعال‌سازی حالت روشن" : "فعال‌سازی حالت تاریک"}
     >
       {isDark ? <Sun className="size-4" /> : <Moon className="size-4" />}

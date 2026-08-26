@@ -11,9 +11,9 @@ export default async function NotFound() {
       </p>
       <h1 className="font-display text-3xl font-extrabold">{t("title")}</h1>
       <p className="mt-3 text-muted">{t("subtitle")}</p>
-      <div className="mt-8 flex flex-wrap gap-3">
-        <Button href="/">{t("home")}</Button>
-        <Button href="/contact" variant="secondary">
+      <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <Button href="/" className="w-full sm:w-auto">{t("home")}</Button>
+        <Button href="/contact" variant="secondary" className="w-full sm:w-auto">
           {t("contact")}
         </Button>
       </div>

@@ -20,7 +20,7 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "mb-12 max-w-3xl",
+        "mb-8 max-w-3xl sm:mb-12",
         align === "center" && "mx-auto text-center",
         className,
       )}
@@ -34,8 +34,8 @@ export function SectionHeading({
         {align === "start" ? (
           <span className="mt-2 hidden h-10 w-px shrink-0 bg-accent sm:block" aria-hidden />
         ) : null}
-        <div>
-          <Tag className="font-display text-[1.65rem] font-extrabold text-balance sm:text-3xl lg:text-[2.15rem]">
+        <div className="min-w-0">
+          <Tag className="font-display text-[1.35rem] font-extrabold text-balance sm:text-3xl lg:text-[2.15rem]">
             {title}
           </Tag>
           {subtitle ? (

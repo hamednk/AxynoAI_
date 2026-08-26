@@ -87,6 +87,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -94,6 +95,9 @@ body {
   color: var(--foreground);
   font-family: var(--font-vazirmatn), Tahoma, system-ui, sans-serif;
   letter-spacing: -0.01em;
+  overflow-x: clip;
+  min-width: 0;
+  padding-bottom: env(safe-area-inset-bottom);
   transition: background-color 0.35s ease, color 0.35s ease;
 }
 
@@ -314,17 +318,26 @@ body::before {
 .brand-monument {
   font-family: var(--font-michroma), var(--font-syne), system-ui, sans-serif;
   font-weight: 400;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   line-height: 1;
   text-transform: uppercase;
+}
+
+@media (min-width: 640px) {
+  .brand-monument {
+    letter-spacing: 0.08em;
+  }
 }
 
 /* Deep galactic blue — logo-matched, Michroma display */
 .brand-hero-title {
   font-family: var(--font-michroma), system-ui, sans-serif;
   font-weight: 400;
-  letter-spacing: 0.14em;
-  line-height: 1.15;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   text-transform: uppercase;
   background: linear-gradient(
     165deg,
@@ -341,6 +354,18 @@ body::before {
   filter: drop-shadow(0 0 14px rgba(0, 120, 200, 0.55))
     drop-shadow(0 0 36px rgba(0, 80, 160, 0.35));
   animation: brand-shimmer 10s ease-in-out infinite;
+}
+
+@media (min-width: 640px) {
+  .brand-hero-title {
+    letter-spacing: 0.1em;
+  }
+}
+
+@media (min-width: 1024px) {
+  .brand-hero-title {
+    letter-spacing: 0.14em;
+  }
 }
 
 .dark .brand-hero-title {
@@ -463,6 +488,17 @@ body::before {
 
 .ticker-track {
   animation: ticker 38s linear infinite;
+  will-change: transform;
+}
+
+@media (max-width: 639px) {
+  .signal-panel {
+    clip-path: none;
+  }
+
+  .axis-cut {
+    clip-path: none;
+  }
 }
 
 @keyframes draw-in {

@@ -6,9 +6,9 @@ export async function FinalCTA() {
   const t = await getTranslations("FinalCTA");
 
   return (
-    <section className="relative overflow-hidden px-4 py-24 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden px-4 py-14 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
       <FadeIn>
-        <div className="cta-bg relative mx-auto max-w-7xl overflow-hidden px-6 py-16 text-white sm:px-12 axis-cut nebula-glow">
+        <div className="cta-bg relative mx-auto max-w-7xl overflow-hidden px-5 py-12 text-white sm:px-12 sm:py-16 axis-cut nebula-glow">
           <div
             className="pointer-events-none absolute inset-y-0 start-[18%] w-px bg-white/15"
             aria-hidden
@@ -27,17 +27,17 @@ export async function FinalCTA() {
             <p className="mt-5 max-w-xl text-sm leading-8 text-white/65 sm:text-base sm:leading-8">
               {t("subtitle")}
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-8 flex w-full flex-col gap-3 sm:mt-9 sm:flex-row sm:flex-wrap">
               <Button
                 href="/contact"
-                className="bg-accent text-btn-fg hover:bg-accent-bright"
+                className="w-full bg-accent text-btn-fg hover:bg-accent-bright sm:w-auto"
               >
                 {t("ctaPrimary")}
               </Button>
               <Button
                 href="/contact"
                 variant="secondary"
-                className="border-white/25 bg-transparent text-white hover:border-white/50 hover:bg-white/5 hover:text-white"
+                className="w-full border-white/25 bg-transparent text-white hover:border-white/50 hover:bg-white/5 hover:text-white sm:w-auto"
               >
                 {t("ctaSecondary")}
               </Button>

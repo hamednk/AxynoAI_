@@ -7,7 +7,7 @@ export async function ProcessTimeline() {
   const t = await getTranslations("Process");
 
   return (
-    <section className="overflow-hidden bg-navy-deep py-24 text-[#e8ecf2]">
+    <section className="overflow-hidden bg-navy-deep py-14 text-[#e8ecf2] sm:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <FadeIn>
           <SectionHeading
@@ -22,7 +22,7 @@ export async function ProcessTimeline() {
             className="pointer-events-none absolute top-5 start-0 end-0 hidden h-px bg-white/15 md:block"
             aria-hidden
           />
-          <ol className="grid gap-8 md:grid-cols-3 lg:grid-cols-6">
+          <ol className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6">
             {processStepKeys.map((step, i) => (
               <FadeIn key={step} delay={i * 0.06}>
                 <li className="relative">

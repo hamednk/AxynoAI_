@@ -18,7 +18,7 @@ export async function ServicesGrid({
   const list = limit ? serviceMetas.slice(0, limit) : serviceMetas;
 
   return (
-    <section id="services" className="relative overflow-hidden bg-surface py-24">
+    <section id="services" className="relative overflow-hidden bg-surface py-14 sm:py-20 lg:py-24">
       <div
         className="pointer-events-none absolute inset-y-0 start-1/2 hidden w-px -translate-x-1/2 bg-[var(--axis)] lg:block"
         aria-hidden
@@ -33,7 +33,7 @@ export async function ServicesGrid({
             />
           </FadeIn>
         ) : null}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((service, i) => (
             <FadeIn key={service.slug} delay={(i % 3) * 0.06}>
               <ServiceCard
@@ -46,8 +46,8 @@ export async function ServicesGrid({
           ))}
         </div>
         {showAllLink ? (
-          <div className="mt-12 flex justify-start">
-            <Button href="/services" variant="secondary">
+          <div className="mt-10 flex justify-start sm:mt-12">
+            <Button href="/services" variant="secondary" className="w-full sm:w-auto">
               {t("viewAll")}
             </Button>
           </div>

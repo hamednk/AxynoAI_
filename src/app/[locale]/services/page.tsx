@@ -19,7 +19,7 @@ export default async function ServicesPage({ params }: Props) {
 
   return (
     <>
-      <div className="hero-bg border-b border-card-border px-4 pt-28 pb-14 sm:px-6 lg:px-8">
+      <div className="hero-bg border-b border-card-border px-4 pt-24 pb-12 sm:px-6 sm:pt-28 sm:pb-14 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <SectionHeading
             eyebrow={t("eyebrow")}

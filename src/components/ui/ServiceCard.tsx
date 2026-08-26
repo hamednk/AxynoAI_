@@ -15,7 +15,7 @@ export function ServiceCard({
   viewLabel: string;
 }) {
   return (
-    <article className="signal-panel group flex h-full flex-col p-6">
+    <article className="signal-panel group flex h-full min-w-0 flex-col p-5 sm:p-6">
       <div className="mb-5 flex items-start justify-between gap-3">
         <div className="flex size-11 items-center justify-center border border-card-border bg-accent-soft text-accent transition group-hover:border-accent/40">
           <AppIcon name={service.icon} className="size-5" strokeWidth={1.6} />
@@ -24,7 +24,7 @@ export function ServiceCard({
           OPEN
         </span>
       </div>
-      <h3 className="mb-2 text-lg font-bold leading-7">{title}</h3>
+      <h3 className="mb-2 text-base font-bold leading-7 text-pretty sm:text-lg">{title}</h3>
       <p className="mb-5 flex-1 text-sm leading-7 text-muted">{short}</p>
       <Link
         href={`/services/${service.slug}`}

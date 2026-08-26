@@ -18,7 +18,7 @@ export async function SolutionsShowcase({
   const list = limit ? solutionMetas.slice(0, limit) : solutionMetas;
 
   return (
-    <section id="solutions" className="bg-surface py-24">
+    <section id="solutions" className="bg-surface py-14 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {!hideHeading ? (
           <FadeIn>
@@ -28,16 +28,16 @@ export async function SolutionsShowcase({
         <div className="space-y-3">
           {list.map((item, i) => (
             <FadeIn key={item.slug} delay={(i % 4) * 0.04}>
-              <article className="group grid gap-4 border border-card-border bg-card p-5 transition hover:border-accent/40 sm:grid-cols-[3rem_1fr_auto] sm:items-center sm:gap-6 sm:p-6">
+              <article className="group grid min-w-0 gap-4 border border-card-border bg-card p-4 transition hover:border-accent/40 sm:grid-cols-[3rem_minmax(0,1fr)_auto] sm:items-center sm:gap-6 sm:p-6">
                 <div className="flex size-12 items-center justify-center border border-card-border text-accent transition group-hover:border-accent/40 group-hover:bg-accent-soft">
                   <AppIcon name={item.icon} className="size-5" strokeWidth={1.5} />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="mb-1 flex items-center gap-3">
                     <span className="font-mono-signal text-[10px] text-muted">
                       {String(i + 1).padStart(2, "0")}
                     </span>
-                    <h3 className="text-lg font-bold leading-7">
+                    <h3 className="text-base font-bold leading-7 text-pretty sm:text-lg">
                       {t(`items.${item.slug}.title`)}
                     </h3>
                   </div>
@@ -59,7 +59,7 @@ export async function SolutionsShowcase({
         </div>
         {limit ? (
           <div className="mt-10 flex justify-start">
-            <Button href="/solutions" variant="secondary">
+            <Button href="/solutions" variant="secondary" className="w-full sm:w-auto">
               {t("viewAll")}
             </Button>
           </div>

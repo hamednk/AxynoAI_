@@ -20,11 +20,11 @@ export async function Footer() {
         className="pointer-events-none absolute inset-y-0 start-[12%] w-px bg-white/10"
         aria-hidden
       />
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+      <div className="mx-auto grid max-w-7xl min-w-0 gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div className="space-y-4">
-          <Link href="/" className="inline-flex items-center gap-3">
+          <Link href="/" className="inline-flex min-w-0 items-center gap-2 sm:gap-3">
             <LogoMark size="md" />
-            <span className="brand-monument text-lg text-white">
+            <span className="brand-monument truncate text-sm text-white sm:text-lg">
               Axyno<span className="text-accent-bright">AI</span>
             </span>
           </Link>
@@ -112,7 +112,7 @@ export async function Footer() {
       </div>
 
       <div className="border-t border-white/10">
-        <p className="mx-auto max-w-7xl px-4 py-5 text-center font-mono-signal text-[10px] tracking-wider text-white/35 sm:px-6 lg:px-8">
+        <p className="mx-auto max-w-7xl px-4 py-5 text-center font-mono-signal text-[9px] tracking-wider break-words text-white/35 sm:px-6 sm:text-[10px] lg:px-8">
           © {site.name} · {t("rights")} · {tMeta("nameFa")}
         </p>
       </div>
