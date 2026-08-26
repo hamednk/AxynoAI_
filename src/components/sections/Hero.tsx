@@ -28,7 +28,6 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.55 }}
         >
-          <LogoMark size="hero" priority />
         </motion.div>
 
         <motion.p
