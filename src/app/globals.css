@@ -144,6 +144,42 @@ body::before {
   position: relative;
 }
 
+.andromeda-field {
+  contain: strict;
+  overflow: hidden;
+}
+
+.andromeda-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 22px color-mix(in oklab, var(--accent) 32%, transparent));
+}
+
+.hero-copy-shade {
+  z-index: 3;
+  background: linear-gradient(
+    to right,
+    color-mix(in oklab, var(--background) 82%, transparent) 0%,
+    color-mix(in oklab, var(--background) 48%, transparent) 32%,
+    transparent 68%
+  );
+}
+
+html[dir="rtl"] .hero-copy-shade {
+  background: linear-gradient(
+    to left,
+    color-mix(in oklab, var(--background) 82%, transparent) 0%,
+    color-mix(in oklab, var(--background) 48%, transparent) 32%,
+    transparent 68%
+  );
+}
+
+.hero-bottom-fade {
+  height: clamp(5rem, 15vh, 10rem);
+  background: linear-gradient(to bottom, transparent 0%, var(--background) 100%);
+}
+
 .hero-bg::before {
   content: "";
   pointer-events: none;
@@ -179,65 +215,6 @@ body::before {
   animation: nebula-drift 18s ease-in-out infinite alternate;
 }
 
-.hero-streaks {
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  overflow: hidden;
-  opacity: 0.55;
-}
-
-.hero-streaks::before,
-.hero-streaks::after {
-  content: "";
-  position: absolute;
-  width: 160%;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(0, 180, 255, 0.05) 20%,
-    rgba(0, 229, 255, 0.55) 50%,
-    rgba(0, 140, 255, 0.08) 75%,
-    transparent 100%
-  );
-  box-shadow:
-    0 0 12px rgba(0, 220, 255, 0.45),
-    0 0 40px rgba(0, 160, 255, 0.25);
-  transform-origin: center;
-}
-
-.hero-streaks::before {
-  top: 28%;
-  left: -20%;
-  transform: rotate(-18deg);
-  animation: streak-glide 9s linear infinite;
-}
-
-.hero-streaks::after {
-  top: 62%;
-  left: -30%;
-  height: 1.5px;
-  opacity: 0.7;
-  transform: rotate(12deg);
-  animation: streak-glide 12s linear infinite reverse;
-}
-
-@keyframes streak-glide {
-  0% {
-    translate: -15% 0;
-    opacity: 0.2;
-  }
-  40% {
-    opacity: 0.75;
-  }
-  100% {
-    translate: 25% 0;
-    opacity: 0.15;
-  }
-}
-
 .hero-bg::after {
   content: "";
   pointer-events: none;
@@ -265,6 +242,22 @@ body::before {
 
 .dark .hero-bg::after {
   opacity: 0.85;
+}
+
+.hero-bg.hero-3d-ready::before {
+  opacity: 0.3;
+}
+
+.hero-bg.hero-3d-ready::after {
+  opacity: 0.12;
+}
+
+.dark .hero-bg.hero-3d-ready::before {
+  opacity: 0.38;
+}
+
+.dark .hero-bg.hero-3d-ready::after {
+  opacity: 0.2;
 }
 
 @keyframes nebula-drift {
@@ -491,6 +484,22 @@ body::before {
   will-change: transform;
 }
 
+@media (max-width: 767px) {
+  .hero-copy-shade,
+  html[dir="rtl"] .hero-copy-shade {
+    background: linear-gradient(
+      to top,
+      color-mix(in oklab, var(--background) 94%, transparent) 0%,
+      color-mix(in oklab, var(--background) 62%, transparent) 34%,
+      transparent 70%
+    );
+  }
+
+  .andromeda-canvas {
+    filter: drop-shadow(0 0 16px color-mix(in oklab, var(--accent) 24%, transparent));
+  }
+}
+
 @media (max-width: 639px) {
   .signal-panel {
     clip-path: none;
@@ -532,9 +541,7 @@ body::before {
   .signal-sweep,
   .ticker-track,
   .hero-bg::before,
-  .brand-hero-title,
-  .hero-streaks::before,
-  .hero-streaks::after {
+  .brand-hero-title {
     animation: none;
   }
 }

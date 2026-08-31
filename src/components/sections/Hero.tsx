@@ -1,35 +1,82 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import dynamic from "next/dynamic";
+import { useCallback, useRef, useState } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/Button";
 import { AxisField } from "@/components/visuals/AxisField";
-import { LogoMark } from "@/components/brand/LogoMark";
+
+const AndromedaField = dynamic(
+  () =>
+    import("@/components/visuals/AndromedaField").then(
+      (module) => module.AndromedaField,
+    ),
+  { ssr: false },
+);
 
 export function Hero() {
+  const heroRef = useRef<HTMLElement>(null);
+  const [sceneReady, setSceneReady] = useState(false);
   const reduce = useReducedMotion();
   const t = useTranslations("Hero");
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const backgroundOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.56, 0.88, 1],
+    [1, 1, 0.32, 0],
+  );
+  const backgroundScale = useTransform(
+    scrollYProgress,
+    [0, 0.72, 1],
+    [1, 1.015, 1.055],
+  );
+  const handleSceneReady = useCallback(() => setSceneReady(true), []);
+  const handleSceneUnavailable = useCallback(() => setSceneReady(false), []);
 
   return (
-    <section className="hero-bg relative min-h-[100svh] overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <AxisField />
-        <div className="hero-streaks" aria-hidden />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-l from-background/50 via-background/15 to-transparent dark:from-background/45 dark:via-background/10" />
-        {!reduce ? (
-          <div className="signal-sweep pointer-events-none absolute inset-y-0 start-0 w-1/3 bg-gradient-to-l from-transparent via-[var(--scan)] to-transparent opacity-45 mix-blend-screen" />
+    <section
+      ref={heroRef}
+      className={`hero-bg relative isolate min-h-[100svh] overflow-hidden ${
+        sceneReady ? "hero-3d-ready" : ""
+      }`}
+    >
+      <motion.div
+        className="pointer-events-none absolute inset-0 z-0 origin-center"
+        style={{ opacity: backgroundOpacity, scale: backgroundScale }}
+      >
+        {!sceneReady ? (
+          <div className="hero-fallback-field absolute inset-0">
+            <AxisField />
+          </div>
         ) : null}
-      </div>
+        <AndromedaField
+          className={`andromeda-field absolute inset-0 transition-opacity duration-1000 ${
+            sceneReady ? "opacity-100" : "opacity-0"
+          }`}
+          reducedMotion={Boolean(reduce)}
+          onReady={handleSceneReady}
+          onUnavailable={handleSceneUnavailable}
+        />
+        <div className="hero-copy-shade absolute inset-0" aria-hidden />
+        {!reduce ? (
+          <div className="signal-sweep absolute inset-y-0 start-0 w-1/4 bg-gradient-to-l from-transparent via-[var(--scan)] to-transparent opacity-20 mix-blend-screen" />
+        ) : null}
+      </motion.div>
+      <div
+        className="hero-bottom-fade pointer-events-none absolute inset-x-0 bottom-0 z-[7]"
+        aria-hidden
+      />
 
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl min-w-0 flex-col justify-end px-4 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-28 lg:justify-center lg:px-8 lg:pb-24 lg:pt-20">
-        <motion.div
-          className="mb-4 sm:mb-5"
-          initial={reduce ? false : { opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.55 }}
-        >
-        </motion.div>
-
         <motion.p
           className="font-mono-signal mb-3 text-[10px] text-steel sm:mb-4 sm:text-[11px]"
           initial={reduce ? false : { opacity: 0, y: 12 }}
