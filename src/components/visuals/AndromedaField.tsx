@@ -106,20 +106,33 @@ function smoothStep(value: number) {
 function getCycleState(time: number) {
   const phase = time % 15;
 
-  if (phase < 5.8) return { burst: 0, logo: 0 };
+  if (phase < 5.8) return { burst: 0, flip: 0, logo: 0 };
   if (phase < 7) {
-    return { burst: smoothStep((phase - 5.8) / 1.2), logo: 0 };
+    return { burst: smoothStep((phase - 5.8) / 1.2), flip: 0, logo: 0 };
   }
   if (phase < 8.7) {
     const progress = smoothStep((phase - 7) / 1.7);
-    return { burst: 1 - progress, logo: progress };
+    return { burst: 1 - progress, flip: 0, logo: progress };
   }
-  if (phase < 11.1) return { burst: 0, logo: 1 };
+  if (phase < 9.1) {
+    return { burst: 0, flip: 0, logo: 1 };
+  }
+  if (phase < 10.7) {
+    const progress = smoothStep((phase - 9.1) / 1.6);
+    return { burst: 0, flip: progress * Math.PI * 2, logo: 1 };
+  }
+  if (phase < 11.1) {
+    return { burst: 0, flip: Math.PI * 2, logo: 1 };
+  }
   if (phase < 13.4) {
-    return { burst: 0, logo: 1 - smoothStep((phase - 11.1) / 2.3) };
+    return {
+      burst: 0,
+      flip: Math.PI * 2,
+      logo: 1 - smoothStep((phase - 11.1) / 2.3),
+    };
   }
 
-  return { burst: 0, logo: 0 };
+  return { burst: 0, flip: 0, logo: 0 };
 }
 
 export function AndromedaField({
@@ -303,7 +316,9 @@ export function AndromedaField({
       if (disposed || !inViewport || !pageVisible) return;
 
       const elapsed = (now - startedAt) / 1000;
-      const cycle = reducedMotion ? { burst: 0, logo: 0 } : getCycleState(elapsed);
+      const cycle = reducedMotion
+        ? { burst: 0, flip: 0, logo: 0 }
+        : getCycleState(elapsed);
       pointUniforms.uTime.value = reducedMotion ? 0 : elapsed;
       pointUniforms.uBurst.value = cycle.burst;
       pointUniforms.uLogo.value = cycle.logo;
@@ -312,12 +327,26 @@ export function AndromedaField({
       if (!reducedMotion) {
         currentTiltX += (baseTiltX + pointerY * 0.06 - currentTiltX) * 0.035;
         currentTiltY += (baseTiltY + pointerX * 0.08 - currentTiltY) * 0.035;
-        galaxyGroup.rotation.x = currentTiltX;
-        galaxyGroup.rotation.y = currentTiltY;
-        points.rotation.z = elapsed * 0.035;
+        galaxyGroup.rotation.x = THREE.MathUtils.lerp(
+          currentTiltX,
+          0,
+          cycle.logo,
+        );
+        galaxyGroup.rotation.y = THREE.MathUtils.lerp(
+          currentTiltY,
+          0,
+          cycle.logo,
+        );
+        points.rotation.y = cycle.flip;
+        points.rotation.z = THREE.MathUtils.lerp(
+          elapsed * 0.035,
+          0,
+          cycle.logo,
+        );
         halo.rotation.z = -elapsed * 0.018;
       } else {
         galaxyGroup.rotation.set(baseTiltX, baseTiltY, 0);
+        points.rotation.y = 0;
         points.rotation.z = 0.18;
         halo.rotation.z = -0.12;
       }
