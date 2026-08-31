@@ -102,7 +102,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       lang={locale}
       dir={dir}
       data-scroll-behavior="smooth"
-      className={`${vazirmatn.variable} ${syne.variable} ${michroma.variable} ${jetbrains.variable} h-full antialiased`}
+      className={`dark ${vazirmatn.variable} ${syne.variable} ${michroma.variable} ${jetbrains.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="relative flex min-h-full min-w-0 flex-col font-sans antialiased">

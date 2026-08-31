@@ -1,7 +1,7 @@
 export const site = {
   name: "AxynoAI",
   phone: "+989127274655",
-  phoneDisplay: "+98 912 727 4655",
+  phoneDisplay: "+98 912 72 74 655",
   email: "info@AxynoAI.com",
   logo: "/logo.png",
 } as const;
