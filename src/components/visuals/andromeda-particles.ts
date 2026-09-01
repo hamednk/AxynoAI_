@@ -1,6 +1,7 @@
 export type ParticleAttributes = {
   galaxy: Float32Array;
   logo: Float32Array;
+  logoColors: Float32Array;
   burst: Float32Array;
   sizes: Float32Array;
   seeds: Float32Array;
@@ -10,6 +11,17 @@ export type ParticleAttributes = {
 type Point2D = {
   x: number;
   y: number;
+};
+
+type LogoPixel = Point2D & {
+  red: number;
+  green: number;
+  blue: number;
+};
+
+export type SampledLogoTargets = {
+  colors: Float32Array;
+  positions: Float32Array;
 };
 
 const TAU = Math.PI * 2;
@@ -89,8 +101,10 @@ export function createFallbackLogoTargets(count: number) {
 
 export function createParticleAttributes(count: number): ParticleAttributes {
   const random = mulberry32(0x41d20da);
+  const colorRandom = mulberry32(0xc010ab);
   const galaxy = new Float32Array(count * 3);
   const burst = new Float32Array(count * 3);
+  const logoColors = new Float32Array(count * 3);
   const sizes = new Float32Array(count);
   const seeds = new Float32Array(count);
   const tones = new Float32Array(count);
@@ -148,9 +162,24 @@ export function createParticleAttributes(count: number): ParticleAttributes {
     burst[offset + 2] =
       z + (z / galaxyLength) * distance + (scatterZ / scatterLength) * 2.1;
     seeds[index] = random();
+
+    const colorSelector = colorRandom();
+    if (colorSelector > 0.76) {
+      logoColors[offset] = 0.02;
+      logoColors[offset + 1] = 0.72 + colorRandom() * 0.18;
+      logoColors[offset + 2] = 0.95 + colorRandom() * 0.05;
+    } else if (colorSelector > 0.38) {
+      logoColors[offset] = 0.01;
+      logoColors[offset + 1] = 0.22 + colorRandom() * 0.18;
+      logoColors[offset + 2] = 0.58 + colorRandom() * 0.25;
+    } else {
+      logoColors[offset] = 0.01;
+      logoColors[offset + 1] = 0.035 + colorRandom() * 0.06;
+      logoColors[offset + 2] = 0.14 + colorRandom() * 0.12;
+    }
   }
 
-  return { galaxy, logo, burst, sizes, seeds, tones };
+  return { galaxy, logo, logoColors, burst, sizes, seeds, tones };
 }
 
 function waitForImage(image: HTMLImageElement) {
@@ -164,7 +193,7 @@ export async function sampleLogoTargets(
   count: number,
   source: string,
   signal?: AbortSignal,
-) {
+): Promise<SampledLogoTargets> {
   const image = new Image();
   image.decoding = "async";
   image.src = source;
@@ -187,7 +216,7 @@ export async function sampleLogoTargets(
 
   context.drawImage(image, 0, 0, size, size);
   const pixels = context.getImageData(0, 0, size, size).data;
-  const candidates: Point2D[] = [];
+  const candidates: LogoPixel[] = [];
   let minX = size;
   let minY = size;
   let maxX = 0;
@@ -207,7 +236,7 @@ export async function sampleLogoTargets(
         (brightness < 205 || (brightness < 235 && colorRange > 24 && blue > red));
 
       if (belongsToLogo) {
-        candidates.push({ x, y });
+        candidates.push({ blue, green, red, x, y });
         minX = Math.min(minX, x);
         minY = Math.min(minY, y);
         maxX = Math.max(maxX, x);
@@ -221,7 +250,8 @@ export async function sampleLogoTargets(
   }
 
   const random = mulberry32(0x10c0fa);
-  const result = new Float32Array(count * 3);
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
   const centerX = (minX + maxX) / 2;
   const centerY = (minY + maxY) / 2;
   const scale = 3.2 / Math.max(maxX - minX, maxY - minY, 1);
@@ -229,11 +259,15 @@ export async function sampleLogoTargets(
   for (let index = 0; index < count; index += 1) {
     const point = candidates[Math.floor(random() * candidates.length)];
     const offset = index * 3;
-    result[offset] = (point.x - centerX) * scale + signedNoise(random) * 0.018;
-    result[offset + 1] =
+    positions[offset] =
+      (point.x - centerX) * scale + signedNoise(random) * 0.018;
+    positions[offset + 1] =
       -(point.y - centerY) * scale + signedNoise(random) * 0.018;
-    result[offset + 2] = signedNoise(random) * 0.11;
+    positions[offset + 2] = signedNoise(random) * 0.11;
+    colors[offset] = point.red / 255;
+    colors[offset + 1] = point.green / 255;
+    colors[offset + 2] = point.blue / 255;
   }
 
-  return result;
+  return { colors, positions };
 }

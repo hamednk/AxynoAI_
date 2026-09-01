@@ -16,6 +16,7 @@ type AndromedaFieldProps = {
 
 const vertexShader = `
   attribute vec3 aLogo;
+  attribute vec3 aLogoColor;
   attribute vec3 aBurst;
   attribute float aSize;
   attribute float aSeed;
@@ -23,11 +24,15 @@ const vertexShader = `
 
   uniform float uBurst;
   uniform float uLogo;
+  uniform float uLogoGlow;
   uniform float uPixelRatio;
   uniform float uTime;
 
   varying float vEnergy;
+  varying float vLogoAmount;
+  varying float vLogoGlow;
   varying float vTone;
+  varying vec3 vLogoColor;
 
   void main() {
     vec3 basePosition = mix(position, aLogo, uLogo);
@@ -40,8 +45,14 @@ const vertexShader = `
     float energy = uBurst * (0.65 + aSeed * 0.8);
 
     gl_Position = projectionMatrix * modelPosition;
-    gl_PointSize = min(18.0, aSize * uPixelRatio * perspective * (1.0 + energy));
+    gl_PointSize = min(
+      20.0,
+      aSize * uPixelRatio * perspective * (1.0 + energy + uLogoGlow * 0.24)
+    );
     vEnergy = energy;
+    vLogoAmount = uLogo;
+    vLogoColor = aLogoColor;
+    vLogoGlow = uLogoGlow;
     vTone = aTone;
   }
 `;
@@ -53,7 +64,10 @@ const fragmentShader = `
   uniform float uOpacity;
 
   varying float vEnergy;
+  varying float vLogoAmount;
+  varying float vLogoGlow;
   varying float vTone;
+  varying vec3 vLogoColor;
 
   void main() {
     float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
@@ -62,6 +76,11 @@ const fragmentShader = `
     vec3 color = mix(uColorDeep, uColorMid, smoothstep(0.08, 0.72, vTone));
     color = mix(color, uColorBright, smoothstep(0.7, 1.0, vTone) + core * 0.22);
     color += uColorBright * vEnergy * 0.24;
+    float logoAmount = smoothstep(0.04, 0.96, vLogoAmount);
+    color = mix(color, vLogoColor, logoAmount);
+    vec3 logoGlowColor = mix(vLogoColor, uColorBright, 0.38);
+    color += logoGlowColor * vLogoGlow * (0.34 + core * 0.72);
+    alpha = min(1.0, alpha * (1.0 + vLogoGlow * 0.24));
 
     if (alpha < 0.01) discard;
     gl_FragColor = vec4(color, alpha * uOpacity);
@@ -106,33 +125,47 @@ function smoothStep(value: number) {
 function getCycleState(time: number) {
   const phase = time % 15;
 
-  if (phase < 5.8) return { burst: 0, flip: 0, logo: 0 };
+  if (phase < 5.8) return { burst: 0, flip: 0, glow: 0, logo: 0 };
   if (phase < 7) {
-    return { burst: smoothStep((phase - 5.8) / 1.2), flip: 0, logo: 0 };
+    const burst = smoothStep((phase - 5.8) / 1.2);
+    return { burst, flip: 0, glow: burst * 0.18, logo: 0 };
   }
   if (phase < 8.7) {
     const progress = smoothStep((phase - 7) / 1.7);
-    return { burst: 1 - progress, flip: 0, logo: progress };
+    return {
+      burst: 1 - progress,
+      flip: 0,
+      glow: progress * (0.4 + Math.sin(progress * Math.PI) * 0.9),
+      logo: progress,
+    };
   }
   if (phase < 9.1) {
-    return { burst: 0, flip: 0, logo: 1 };
+    return { burst: 0, flip: 0, glow: 0.48, logo: 1 };
   }
   if (phase < 10.7) {
     const progress = smoothStep((phase - 9.1) / 1.6);
-    return { burst: 0, flip: progress * Math.PI * 2, logo: 1 };
+    return {
+      burst: 0,
+      flip: progress * Math.PI * 2,
+      glow: 0.48 + Math.sin(progress * Math.PI) ** 2 * 0.62,
+      logo: 1,
+    };
   }
   if (phase < 11.1) {
-    return { burst: 0, flip: Math.PI * 2, logo: 1 };
+    return { burst: 0, flip: Math.PI * 2, glow: 0.48, logo: 1 };
   }
   if (phase < 13.4) {
+    const progress = smoothStep((phase - 11.1) / 2.3);
     return {
       burst: 0,
       flip: Math.PI * 2,
-      logo: 1 - smoothStep((phase - 11.1) / 2.3),
+      glow:
+        (1 - progress) * 0.48 + Math.sin(progress * Math.PI) * 1.18,
+      logo: 1 - progress,
     };
   }
 
-  return { burst: 0, flip: 0, logo: 0 };
+  return { burst: 0, flip: 0, glow: 0, logo: 0 };
 }
 
 export function AndromedaField({
@@ -203,6 +236,10 @@ export function AndromedaField({
       new THREE.BufferAttribute(attributes.logo, 3),
     );
     geometry.setAttribute(
+      "aLogoColor",
+      new THREE.BufferAttribute(attributes.logoColors, 3),
+    );
+    geometry.setAttribute(
       "aBurst",
       new THREE.BufferAttribute(attributes.burst, 3),
     );
@@ -216,6 +253,7 @@ export function AndromedaField({
       uColorDeep: { value: new THREE.Color("#07509b") },
       uColorMid: { value: new THREE.Color("#00b8f0") },
       uLogo: { value: 0 },
+      uLogoGlow: { value: 0 },
       uOpacity: { value: 0.86 },
       uPixelRatio: { value: 1 },
       uTime: { value: 0 },
@@ -317,11 +355,12 @@ export function AndromedaField({
 
       const elapsed = (now - startedAt) / 1000;
       const cycle = reducedMotion
-        ? { burst: 0, flip: 0, logo: 0 }
+        ? { burst: 0, flip: 0, glow: 0, logo: 0 }
         : getCycleState(elapsed);
       pointUniforms.uTime.value = reducedMotion ? 0 : elapsed;
       pointUniforms.uBurst.value = cycle.burst;
       pointUniforms.uLogo.value = cycle.logo;
+      pointUniforms.uLogoGlow.value = cycle.glow;
       haloUniforms.uTime.value = reducedMotion ? 0 : elapsed;
 
       if (!reducedMotion) {
@@ -409,9 +448,13 @@ export function AndromedaField({
     requestRender();
 
     void sampleLogoTargets(particleCount, "/logo.png", controller.signal)
-      .then((logoTargets) => {
+      .then(({ colors, positions }) => {
         if (disposed || controller.signal.aborted) return;
-        geometry.setAttribute("aLogo", new THREE.BufferAttribute(logoTargets, 3));
+        geometry.setAttribute("aLogo", new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute(
+          "aLogoColor",
+          new THREE.BufferAttribute(colors, 3),
+        );
         requestRender();
       })
       .catch((error: unknown) => {
