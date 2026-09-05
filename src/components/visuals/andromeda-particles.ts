@@ -1,11 +1,23 @@
 export type ParticleAttributes = {
   galaxy: Float32Array;
   logo: Float32Array;
+  emblem: Float32Array;
+  emblemMask: Float32Array;
   logoColors: Float32Array;
   burst: Float32Array;
   sizes: Float32Array;
   seeds: Float32Array;
   tones: Float32Array;
+};
+
+export type BinaryAttributes = {
+  angles: Float32Array;
+  digits: Float32Array;
+  radii: Float32Array;
+  seeds: Float32Array;
+  sizes: Float32Array;
+  speeds: Float32Array;
+  tilts: Float32Array;
 };
 
 type Point2D = {
@@ -21,8 +33,14 @@ type LogoPixel = Point2D & {
 
 export type SampledLogoTargets = {
   colors: Float32Array;
+  emblem: Float32Array;
+  emblemMask: Float32Array;
   positions: Float32Array;
 };
+
+const SPHERE_RADIUS = 1.68;
+const EMBLEM_RADIUS = 1.12;
+const EMBLEM_ANGULAR_SIZE = 0.7;
 
 const TAU = Math.PI * 2;
 
@@ -99,6 +117,83 @@ export function createFallbackLogoTargets(count: number) {
   return result;
 }
 
+function sphericalPoint(random: () => number, radius: number) {
+  const phi = Math.acos(2 * random() - 1);
+  const lambda = random() * TAU;
+  const sinPhi = Math.sin(phi);
+
+  return {
+    x: sinPhi * Math.cos(lambda) * radius,
+    y: Math.cos(phi) * radius,
+    z: sinPhi * Math.sin(lambda) * radius,
+  };
+}
+
+function isElectricBlueFill(red: number, green: number, blue: number) {
+  return blue > 92 && blue > red + 32 && blue >= green - 6 && green > 38;
+}
+
+function restyleLogoColor(red: number, green: number, blue: number) {
+  if (isElectricBlueFill(red, green, blue)) {
+    const luminance = (red * 0.22 + green * 0.42 + blue * 0.36) / 255;
+    if (luminance > 0.52) {
+      return { b: 0.9, g: 0.86, r: 0.8 };
+    }
+    return { b: 0.11, g: 0.06, r: 0.035 };
+  }
+
+  return {
+    b: Math.min(blue, red * 0.92 + 28) / 255,
+    g: green / 255,
+    r: red / 255,
+  };
+}
+
+function projectLogoToEmblem(x: number, y: number, extent: number) {
+  const nx = x / extent;
+  const ny = y / extent;
+  const disk = Math.min(1, Math.hypot(nx, ny));
+  const theta = disk * EMBLEM_ANGULAR_SIZE;
+  const phi = Math.atan2(ny, nx);
+  const sinTheta = Math.sin(theta);
+
+  return {
+    x: EMBLEM_RADIUS * sinTheta * Math.cos(phi),
+    y: EMBLEM_RADIUS * sinTheta * Math.sin(phi),
+    z: EMBLEM_RADIUS * Math.cos(theta),
+  };
+}
+
+function logoExtent(positions: Float32Array) {
+  let max = 0.001;
+  for (let index = 0; index < positions.length; index += 3) {
+    max = Math.max(
+      max,
+      Math.abs(positions[index]),
+      Math.abs(positions[index + 1]),
+    );
+  }
+  return max;
+}
+
+function createEmblemFromLogo(logo: Float32Array, count: number, random: () => number) {
+  const emblem = new Float32Array(count * 3);
+  const emblemMask = new Float32Array(count);
+  const extent = logoExtent(logo);
+  const emblemShare = 0.42;
+
+  for (let index = 0; index < count; index += 1) {
+    const offset = index * 3;
+    const mapped = projectLogoToEmblem(logo[offset], logo[offset + 1], extent);
+    emblem[offset] = mapped.x + signedNoise(random) * 0.012;
+    emblem[offset + 1] = mapped.y + signedNoise(random) * 0.012;
+    emblem[offset + 2] = mapped.z + signedNoise(random) * 0.01;
+    emblemMask[index] = index / count < emblemShare ? 1 : 0;
+  }
+
+  return { emblem, emblemMask };
+}
+
 export function createParticleAttributes(count: number): ParticleAttributes {
   const random = mulberry32(0x41d20da);
   const colorRandom = mulberry32(0xc010ab);
@@ -109,40 +204,34 @@ export function createParticleAttributes(count: number): ParticleAttributes {
   const seeds = new Float32Array(count);
   const tones = new Float32Array(count);
   const logo = createFallbackLogoTargets(count);
-  const maxRadius = 2.75;
 
   for (let index = 0; index < count; index += 1) {
     const selector = random();
     let radius: number;
-    let angle: number;
-    let thickness: number;
 
-    if (selector < 0.16) {
-      radius = Math.pow(random(), 2.7) * 0.82;
-      angle = random() * TAU;
-      thickness = 0.2 * (1 - radius / maxRadius);
-      tones[index] = 0.72 + random() * 0.28;
-      sizes[index] = 4.2 + random() * 5.4;
-    } else if (selector < 0.91) {
-      radius = 0.24 + Math.pow(random(), 0.72) * (maxRadius - 0.24);
-      const arm = index % 2;
-      const armNoise = signedNoise(random) * (0.2 + radius * 0.11);
-      angle = arm * Math.PI + radius * 1.92 + armNoise;
-      thickness = 0.16 * (1 - radius / (maxRadius * 1.12));
-      tones[index] = 0.22 + (1 - radius / maxRadius) * 0.58 + random() * 0.16;
-      sizes[index] = 2.2 + random() * 4.1;
+    if (selector < 0.12) {
+      radius = Math.pow(random(), 0.55) * 0.62;
+      tones[index] = 0.86 + random() * 0.14;
+      sizes[index] = 4.8 + random() * 5.6;
+    } else if (selector < 0.78) {
+      radius = SPHERE_RADIUS + signedNoise(random) * 0.042;
+      tones[index] = 0.4 + random() * 0.5;
+      sizes[index] = 2.4 + random() * 3.6;
+    } else if (selector < 0.92) {
+      radius = Math.pow(random(), 0.3) * SPHERE_RADIUS;
+      tones[index] = 0.24 + random() * 0.46;
+      sizes[index] = 1.7 + random() * 3.0;
     } else {
-      radius = 1.4 + Math.pow(random(), 0.5) * 1.75;
-      angle = random() * TAU;
-      thickness = 0.26;
-      tones[index] = 0.12 + random() * 0.38;
-      sizes[index] = 1.5 + random() * 3.2;
+      radius = SPHERE_RADIUS + 0.18 + random() * 0.38;
+      tones[index] = 0.16 + random() * 0.32;
+      sizes[index] = 1.25 + random() * 2.4;
     }
 
+    const point = sphericalPoint(random, radius);
     const offset = index * 3;
-    const x = Math.cos(angle) * radius * 1.18;
-    const y = Math.sin(angle) * radius * 0.48;
-    const z = signedNoise(random) * thickness;
+    const x = point.x;
+    const y = point.y;
+    const z = point.z;
 
     galaxy[offset] = x;
     galaxy[offset + 1] = y;
@@ -164,22 +253,60 @@ export function createParticleAttributes(count: number): ParticleAttributes {
     seeds[index] = random();
 
     const colorSelector = colorRandom();
-    if (colorSelector > 0.76) {
-      logoColors[offset] = 0.02;
-      logoColors[offset + 1] = 0.72 + colorRandom() * 0.18;
-      logoColors[offset + 2] = 0.95 + colorRandom() * 0.05;
-    } else if (colorSelector > 0.38) {
-      logoColors[offset] = 0.01;
-      logoColors[offset + 1] = 0.22 + colorRandom() * 0.18;
-      logoColors[offset + 2] = 0.58 + colorRandom() * 0.25;
+    if (colorSelector > 0.72) {
+      logoColors[offset] = 0.78 + colorRandom() * 0.16;
+      logoColors[offset + 1] = 0.84 + colorRandom() * 0.12;
+      logoColors[offset + 2] = 0.9 + colorRandom() * 0.08;
+    } else if (colorSelector > 0.34) {
+      logoColors[offset] = 0.04 + colorRandom() * 0.05;
+      logoColors[offset + 1] = 0.08 + colorRandom() * 0.08;
+      logoColors[offset + 2] = 0.14 + colorRandom() * 0.1;
     } else {
-      logoColors[offset] = 0.01;
-      logoColors[offset + 1] = 0.035 + colorRandom() * 0.06;
-      logoColors[offset + 2] = 0.14 + colorRandom() * 0.12;
+      logoColors[offset] = 0.02 + colorRandom() * 0.03;
+      logoColors[offset + 1] = 0.03 + colorRandom() * 0.04;
+      logoColors[offset + 2] = 0.06 + colorRandom() * 0.06;
     }
   }
 
-  return { galaxy, logo, logoColors, burst, sizes, seeds, tones };
+  const { emblem, emblemMask } = createEmblemFromLogo(logo, count, random);
+
+  return {
+    burst,
+    emblem,
+    emblemMask,
+    galaxy,
+    logo,
+    logoColors,
+    seeds,
+    sizes,
+    tones,
+  };
+}
+
+export function createBinaryAttributes(count: number): BinaryAttributes {
+  const random = mulberry32(0xb1a41);
+  const angles = new Float32Array(count);
+  const digits = new Float32Array(count);
+  const radii = new Float32Array(count);
+  const seeds = new Float32Array(count);
+  const sizes = new Float32Array(count);
+  const speeds = new Float32Array(count);
+  const tilts = new Float32Array(count);
+  const rings = 6;
+
+  for (let index = 0; index < count; index += 1) {
+    const ring = index % rings;
+    const direction = ring % 2 === 0 ? 1 : -1;
+    angles[index] = (index / Math.max(1, count)) * TAU * 13 + ring * 0.62;
+    radii[index] = 2.05 + ring * 0.18 + random() * 0.07;
+    tilts[index] = (ring / (rings - 1) - 0.5) * 1.05;
+    speeds[index] = direction * (0.42 + random() * 0.28);
+    digits[index] = random() > 0.5 ? 1 : 0;
+    seeds[index] = random();
+    sizes[index] = 16 + random() * 14;
+  }
+
+  return { angles, digits, radii, seeds, sizes, speeds, tilts };
 }
 
 function waitForImage(image: HTMLImageElement) {
@@ -233,7 +360,9 @@ export async function sampleLogoTargets(
       const colorRange = Math.max(red, green, blue) - Math.min(red, green, blue);
       const belongsToLogo =
         alpha > 48 &&
-        (brightness < 205 || (brightness < 235 && colorRange > 24 && blue > red));
+        brightness < 208 &&
+        !isElectricBlueFill(red, green, blue) &&
+        (brightness < 188 || colorRange > 18);
 
       if (belongsToLogo) {
         candidates.push({ blue, green, red, x, y });
@@ -259,15 +388,18 @@ export async function sampleLogoTargets(
   for (let index = 0; index < count; index += 1) {
     const point = candidates[Math.floor(random() * candidates.length)];
     const offset = index * 3;
+    const restyled = restyleLogoColor(point.red, point.green, point.blue);
     positions[offset] =
       (point.x - centerX) * scale + signedNoise(random) * 0.018;
     positions[offset + 1] =
       -(point.y - centerY) * scale + signedNoise(random) * 0.018;
     positions[offset + 2] = signedNoise(random) * 0.11;
-    colors[offset] = point.red / 255;
-    colors[offset + 1] = point.green / 255;
-    colors[offset + 2] = point.blue / 255;
+    colors[offset] = restyled.r;
+    colors[offset + 1] = restyled.g;
+    colors[offset + 2] = restyled.b;
   }
 
-  return { colors, positions };
+  const { emblem, emblemMask } = createEmblemFromLogo(positions, count, random);
+
+  return { colors, emblem, emblemMask, positions };
 }
