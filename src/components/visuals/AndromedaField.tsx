@@ -2,10 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import {
-  createBinaryAttributes,
-  createParticleAttributes,
-} from "@/components/visuals/andromeda-particles";
+import { createBinaryAttributes } from "@/components/visuals/andromeda-particles";
 
 type AndromedaFieldProps = {
   className?: string;
@@ -15,99 +12,6 @@ type AndromedaFieldProps = {
 };
 
 const LOGO_URL = "/logo.jpg";
-
-const vertexShader = `
-  attribute vec3 aBurst;
-  attribute float aSize;
-  attribute float aSeed;
-  attribute float aTone;
-
-  uniform float uBurst;
-  uniform float uLogo;
-  uniform float uLogoGlow;
-  uniform float uPixelRatio;
-  uniform float uTime;
-
-  varying float vEnergy;
-  varying float vLogoAmount;
-  varying float vLogoGlow;
-  varying float vTone;
-
-  void main() {
-    vec3 particlePosition = mix(position, aBurst, uBurst);
-    float drift = sin(uTime * (0.32 + aSeed * 0.42) + aSeed * 28.0);
-    particlePosition.z += drift * 0.018 * (1.0 - uLogo) * (1.0 - uBurst);
-
-    vec4 modelPosition = modelViewMatrix * vec4(particlePosition, 1.0);
-    float perspective = 6.4 / max(1.0, -modelPosition.z);
-    float energy = uBurst * (0.65 + aSeed * 0.8);
-
-    gl_Position = projectionMatrix * modelPosition;
-    gl_PointSize = min(
-      20.0,
-      aSize * uPixelRatio * perspective * (1.0 + energy + uLogoGlow * 0.18)
-    );
-    vEnergy = energy;
-    vLogoAmount = uLogo;
-    vLogoGlow = uLogoGlow;
-    vTone = aTone;
-  }
-`;
-
-const fragmentShader = `
-  uniform vec3 uColorBright;
-  uniform vec3 uColorDeep;
-  uniform vec3 uColorMid;
-  uniform float uOpacity;
-
-  varying float vEnergy;
-  varying float vLogoAmount;
-  varying float vLogoGlow;
-  varying float vTone;
-
-  void main() {
-    float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
-    float alpha = smoothstep(0.5, 0.08, distanceToCenter);
-    float core = smoothstep(0.28, 0.0, distanceToCenter);
-    vec3 color = mix(uColorDeep, uColorMid, smoothstep(0.08, 0.72, vTone));
-    color = mix(color, uColorBright, smoothstep(0.7, 1.0, vTone) + core * 0.22);
-    color += uColorBright * vEnergy * 0.24;
-    alpha *= 1.0 - smoothstep(0.15, 0.92, vLogoAmount) * 0.92;
-    alpha = min(1.0, alpha * (1.0 + vLogoGlow * 0.2));
-
-    if (alpha < 0.01) discard;
-    gl_FragColor = vec4(color, alpha * uOpacity);
-  }
-`;
-
-const haloVertexShader = `
-  varying vec3 vNormal;
-  varying vec3 vView;
-
-  void main() {
-    vNormal = normalize(normalMatrix * normal);
-    vec4 modelViewPosition = modelViewMatrix * vec4(position, 1.0);
-    vView = normalize(-modelViewPosition.xyz);
-    gl_Position = projectionMatrix * modelViewPosition;
-  }
-`;
-
-const haloFragmentShader = `
-  uniform vec3 uHaloColor;
-  uniform float uHaloOpacity;
-  uniform float uTime;
-
-  varying vec3 vNormal;
-  varying vec3 vView;
-
-  void main() {
-    float fresnel = pow(1.0 - abs(dot(vNormal, vView)), 2.2);
-    float pulse = 0.82 + 0.18 * sin(uTime * 0.7);
-    float alpha = (0.08 + fresnel * 0.72) * uHaloOpacity * pulse;
-
-    gl_FragColor = vec4(uHaloColor, alpha);
-  }
-`;
 
 const binaryVertexShader = `
   attribute float aDigit;
@@ -217,80 +121,8 @@ const logoFragmentShader = `
   }
 `;
 
-function smoothStep(value: number) {
-  const clamped = Math.min(1, Math.max(0, value));
-  return clamped * clamped * (3 - 2 * clamped);
-}
-
 function zoomPulse(time: number) {
-  return 0.82 + (Math.sin(time * 1.05) * 0.5 + 0.5) * 0.38;
-}
-
-function getCycleState(time: number) {
-  const phase = time % 18;
-
-  if (phase < 5.4) {
-    return {
-      binary: 0,
-      burst: 0,
-      emblem: 1,
-      glow: 0.32 + Math.sin(time * 1.4) * 0.1,
-      logo: 0,
-      spin: 1,
-      zoom: 1,
-    };
-  }
-  if (phase < 6.7) {
-    const burst = smoothStep((phase - 5.4) / 1.3);
-    return {
-      binary: 0,
-      burst,
-      emblem: 1 - burst,
-      glow: burst * 0.22,
-      logo: 0,
-      spin: 1 - burst * 0.35,
-      zoom: 1,
-    };
-  }
-  if (phase < 8.5) {
-    const progress = smoothStep((phase - 6.7) / 1.8);
-    return {
-      binary: progress,
-      burst: 1 - progress,
-      emblem: 0,
-      glow: progress * (0.42 + Math.sin(progress * Math.PI) * 0.88),
-      logo: progress,
-      spin: 0,
-      zoom: 0.78 + progress * 0.14,
-    };
-  }
-  if (phase < 15.2) {
-    const local = phase - 8.5;
-    return {
-      binary: 1,
-      burst: 0,
-      emblem: 0,
-      glow: 0.42 + Math.sin(local * 1.15) ** 2 * 0.28,
-      logo: 1,
-      spin: 0,
-      zoom: zoomPulse(local),
-    };
-  }
-
-  const progress = smoothStep((phase - 15.2) / 2.8);
-  return {
-    binary: 1 - progress,
-    burst: 0,
-    emblem: progress,
-    glow: (1 - progress) * 0.48 + Math.sin(progress * Math.PI) * 0.7,
-    logo: 1 - progress,
-    spin: progress,
-    zoom: 1,
-  };
-}
-
-function createCurvedLogoGeometry(width: number, height: number) {
-  return new THREE.PlaneGeometry(width, height, 48, 48);
+  return 0.84 + (Math.sin(time * 1.05) * 0.5 + 0.5) * 0.34;
 }
 
 function loadLogoTexture(url: string, signal: AbortSignal) {
@@ -343,18 +175,7 @@ export function AndromedaField({
 
     const controller = new AbortController();
     const mobile = window.innerWidth < 768;
-    const lowPowerDevice =
-      typeof navigator.hardwareConcurrency === "number" &&
-      navigator.hardwareConcurrency <= 4;
-    const particleCount = mobile
-      ? lowPowerDevice
-        ? 4500
-        : 7000
-      : lowPowerDevice
-        ? 14000
-        : 22000;
     const binaryCount = mobile ? 140 : 240;
-    const attributes = createParticleAttributes(particleCount);
     const binaryAttributes = createBinaryAttributes(binaryCount);
     let renderer: THREE.WebGLRenderer;
 
@@ -384,74 +205,12 @@ export function AndromedaField({
     const camera = new THREE.PerspectiveCamera(44, 1, 0.1, 50);
     camera.position.z = 7;
 
-    const galaxyGroup = new THREE.Group();
-    scene.add(galaxyGroup);
-
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(attributes.galaxy, 3),
-    );
-    geometry.setAttribute(
-      "aBurst",
-      new THREE.BufferAttribute(attributes.burst, 3),
-    );
-    geometry.setAttribute("aSize", new THREE.BufferAttribute(attributes.sizes, 1));
-    geometry.setAttribute("aSeed", new THREE.BufferAttribute(attributes.seeds, 1));
-    geometry.setAttribute("aTone", new THREE.BufferAttribute(attributes.tones, 1));
-
-    const pointUniforms = {
-      uBurst: { value: 0 },
-      uColorBright: { value: new THREE.Color("#e8fbff") },
-      uColorDeep: { value: new THREE.Color("#07509b") },
-      uColorMid: { value: new THREE.Color("#00b8f0") },
-      uLogo: { value: 0 },
-      uLogoGlow: { value: 0 },
-      uOpacity: { value: 0.86 },
-      uPixelRatio: { value: 1 },
-      uTime: { value: 0 },
-    };
-    const material = new THREE.ShaderMaterial({
-      blending: THREE.AdditiveBlending,
-      depthTest: false,
-      depthWrite: false,
-      fragmentShader,
-      transparent: true,
-      uniforms: pointUniforms,
-      vertexShader,
-    });
-    const points = new THREE.Points(geometry, material);
-    points.frustumCulled = false;
-    points.renderOrder = 1;
-    galaxyGroup.add(points);
-
-    const haloUniforms = {
-      uHaloColor: { value: new THREE.Color("#00a8e8") },
-      uHaloOpacity: { value: 0.7 },
-      uTime: { value: 0 },
-    };
-    const haloMaterial = new THREE.ShaderMaterial({
-      blending: THREE.AdditiveBlending,
-      depthTest: false,
-      depthWrite: false,
-      fragmentShader: haloFragmentShader,
-      side: THREE.BackSide,
-      transparent: true,
-      uniforms: haloUniforms,
-      vertexShader: haloVertexShader,
-    });
-    const haloGeometry = new THREE.SphereGeometry(2.02, 48, 48);
-    const halo = new THREE.Mesh(haloGeometry, haloMaterial);
-    halo.renderOrder = 0;
-    galaxyGroup.add(halo);
-
-    const logoGroup = new THREE.Group();
-    logoGroup.renderOrder = 3;
-    galaxyGroup.add(logoGroup);
+    const stage = new THREE.Group();
+    scene.add(stage);
 
     const logoUniforms = {
       uCurve: { value: 0.08 },
-      uGlow: { value: 0 },
+      uGlow: { value: 0.35 },
       uMap: { value: null as THREE.Texture | null },
       uOpacity: { value: 0 },
       uZoom: { value: 1 },
@@ -465,34 +224,11 @@ export function AndromedaField({
       uniforms: logoUniforms,
       vertexShader: logoVertexShader,
     });
-    const logoGeometry = createCurvedLogoGeometry(3.05, 3.05);
+    const logoGeometry = new THREE.PlaneGeometry(3.05, 3.05, 48, 48);
     const logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
     logoMesh.frustumCulled = false;
-    logoMesh.visible = false;
-    logoGroup.add(logoMesh);
-
-    const emblemUniforms = {
-      uCurve: { value: 0.55 },
-      uGlow: { value: 0.35 },
-      uMap: { value: null as THREE.Texture | null },
-      uOpacity: { value: 0 },
-      uZoom: { value: 1 },
-    };
-    const emblemMaterial = new THREE.ShaderMaterial({
-      depthTest: false,
-      depthWrite: false,
-      fragmentShader: logoFragmentShader,
-      side: THREE.DoubleSide,
-      transparent: true,
-      uniforms: emblemUniforms,
-      vertexShader: logoVertexShader,
-    });
-    const emblemGeometry = createCurvedLogoGeometry(1.35, 1.35);
-    const emblemMesh = new THREE.Mesh(emblemGeometry, emblemMaterial);
-    emblemMesh.position.z = 1.05;
-    emblemMesh.frustumCulled = false;
-    emblemMesh.visible = false;
-    logoGroup.add(emblemMesh);
+    logoMesh.renderOrder = 2;
+    stage.add(logoMesh);
 
     const binaryGeometry = new THREE.BufferGeometry();
     binaryGeometry.setAttribute(
@@ -545,8 +281,8 @@ export function AndromedaField({
     });
     const binaryPoints = new THREE.Points(binaryGeometry, binaryMaterial);
     binaryPoints.frustumCulled = false;
-    binaryPoints.renderOrder = 2;
-    galaxyGroup.add(binaryPoints);
+    binaryPoints.renderOrder = 1;
+    stage.add(binaryPoints);
 
     let animationFrame = 0;
     let disposed = false;
@@ -554,22 +290,15 @@ export function AndromedaField({
     let pageVisible = document.visibilityState === "visible";
     let pointerX = 0;
     let pointerY = 0;
-    let currentTiltX = -0.08;
+    let currentTiltX = -0.04;
     let currentTiltY = 0;
-    let baseTiltX = -0.08;
+    let baseTiltX = -0.04;
     let baseTiltY = 0;
-    let baseHaloOpacity = 0.7;
     let logoTexture: THREE.Texture | null = null;
     const startedAt = performance.now();
 
     const applyTheme = () => {
       const dark = document.documentElement.classList.contains("dark");
-      pointUniforms.uColorBright.value.set(dark ? "#e8fbff" : "#d9f8ff");
-      pointUniforms.uColorMid.value.set(dark ? "#00c8f8" : "#008dcc");
-      pointUniforms.uColorDeep.value.set(dark ? "#06458f" : "#073f77");
-      pointUniforms.uOpacity.value = dark ? 0.92 : 0.76;
-      haloUniforms.uHaloColor.value.set(dark ? "#00a8e8" : "#0077bb");
-      baseHaloOpacity = dark ? 0.78 : 0.42;
       binaryUniforms.uColor.value.set(dark ? "#9af7ff" : "#0477a8");
     };
 
@@ -583,22 +312,21 @@ export function AndromedaField({
 
       renderer.setPixelRatio(pixelRatio);
       renderer.setSize(width, height, false);
-      pointUniforms.uPixelRatio.value = pixelRatio;
       binaryUniforms.uPixelRatio.value = pixelRatio;
       camera.aspect = width / height;
       camera.fov = isMobile ? 46 : 44;
       camera.updateProjectionMatrix();
 
       if (isMobile) {
-        galaxyGroup.position.set(0, 0.72, 0);
-        galaxyGroup.scale.setScalar(0.49);
-        baseTiltX = -0.04;
+        stage.position.set(0, 0.72, 0);
+        stage.scale.setScalar(0.49);
+        baseTiltX = -0.02;
         baseTiltY = 0;
       } else {
-        galaxyGroup.position.set(direction === "rtl" ? -1.45 : 1.45, compact ? 0.12 : 0, 0);
-        galaxyGroup.scale.setScalar(compact ? 0.78 : 1);
-        baseTiltX = -0.1;
-        baseTiltY = direction === "rtl" ? -0.12 : 0.12;
+        stage.position.set(direction === "rtl" ? -1.45 : 1.45, compact ? 0.12 : 0, 0);
+        stage.scale.setScalar(compact ? 0.78 : 1);
+        baseTiltX = -0.04;
+        baseTiltY = direction === "rtl" ? -0.08 : 0.08;
       }
     };
 
@@ -613,65 +341,31 @@ export function AndromedaField({
       if (disposed || !inViewport || !pageVisible) return;
 
       const elapsed = (now - startedAt) / 1000;
-      const cycle = reducedMotion
-        ? { binary: 0.22, burst: 0, emblem: 0.85, glow: 0.28, logo: 0, spin: 0, zoom: 1 }
-        : getCycleState(elapsed);
-
-      pointUniforms.uTime.value = reducedMotion ? 0 : elapsed;
-      pointUniforms.uBurst.value = cycle.burst;
-      pointUniforms.uLogo.value = cycle.logo;
-      pointUniforms.uLogoGlow.value = cycle.glow;
-
-      haloUniforms.uTime.value = reducedMotion ? 0 : elapsed;
-      haloUniforms.uHaloOpacity.value =
-        baseHaloOpacity *
-        (0.55 + cycle.glow * 0.7) *
-        (1 - cycle.logo * 0.55) *
-        (0.35 + cycle.emblem * 0.65 + cycle.burst * 0.4);
+      const zoom = reducedMotion ? 1 : zoomPulse(elapsed);
+      const glow = reducedMotion
+        ? 0.28
+        : 0.28 + Math.sin(elapsed * 1.15) ** 2 * 0.22;
 
       binaryUniforms.uTime.value = reducedMotion ? 0 : elapsed;
-      binaryUniforms.uZoom.value = cycle.zoom;
-      binaryUniforms.uOpacity.value = cycle.binary * (reducedMotion ? 0.35 : 0.88);
+      binaryUniforms.uZoom.value = zoom;
+      binaryUniforms.uOpacity.value = reducedMotion ? 0.35 : 0.88;
 
-      logoUniforms.uOpacity.value = cycle.logo;
-      logoUniforms.uZoom.value = cycle.zoom;
-      logoUniforms.uGlow.value = cycle.glow;
-      logoUniforms.uCurve.value = 0.06 + cycle.logo * 0.04;
-      logoMesh.visible = cycle.logo > 0.02;
-
-      emblemUniforms.uOpacity.value = cycle.emblem * 0.96;
-      emblemUniforms.uGlow.value = 0.25 + cycle.glow * 0.35;
-      emblemUniforms.uZoom.value = 1;
-      emblemUniforms.uCurve.value = 0.52;
-      emblemMesh.visible = cycle.emblem > 0.02;
+      logoUniforms.uOpacity.value = 1;
+      logoUniforms.uZoom.value = zoom;
+      logoUniforms.uGlow.value = glow;
+      logoUniforms.uCurve.value = 0.08;
 
       if (!reducedMotion) {
-        currentTiltX += (baseTiltX + pointerY * 0.06 - currentTiltX) * 0.035;
-        currentTiltY += (baseTiltY + pointerX * 0.08 - currentTiltY) * 0.035;
-        galaxyGroup.rotation.x = THREE.MathUtils.lerp(
-          currentTiltX,
-          0.02,
-          cycle.logo,
-        );
-        galaxyGroup.rotation.y = THREE.MathUtils.lerp(
-          currentTiltY,
-          0,
-          cycle.logo,
-        );
-        points.rotation.x = elapsed * 0.1 * cycle.spin;
-        points.rotation.y = elapsed * 0.42 * cycle.spin;
-        halo.rotation.y = elapsed * 0.22 * Math.max(cycle.spin, 0.18);
-        logoGroup.rotation.y = elapsed * 0.42 * cycle.spin;
-        emblemMesh.rotation.z = Math.sin(elapsed * 0.35) * 0.04;
+        currentTiltX += (baseTiltX + pointerY * 0.05 - currentTiltX) * 0.035;
+        currentTiltY += (baseTiltY + pointerX * 0.06 - currentTiltY) * 0.035;
+        stage.rotation.x = currentTiltX;
+        stage.rotation.y = currentTiltY;
         binaryPoints.rotation.x = Math.sin(elapsed * 0.16) * 0.08;
-        binaryPoints.scale.setScalar(0.94 + (cycle.zoom - 1) * 0.3);
+        binaryPoints.scale.setScalar(0.94 + (zoom - 1) * 0.3);
       } else {
-        galaxyGroup.rotation.set(baseTiltX, baseTiltY, 0);
-        points.rotation.y = 0.35;
-        points.rotation.x = 0.12;
-        halo.rotation.y = 0.2;
-        logoGroup.rotation.set(0, 0.35, 0);
-        binaryPoints.rotation.set(0.12, 0.4, 0.08);
+        stage.rotation.set(baseTiltX, baseTiltY, 0);
+        binaryPoints.rotation.set(0.08, 0.2, 0.04);
+        binaryPoints.scale.setScalar(1);
       }
 
       renderer.render(scene, camera);
@@ -739,7 +433,6 @@ export function AndromedaField({
         }
         logoTexture = texture;
         logoUniforms.uMap.value = texture;
-        emblemUniforms.uMap.value = texture;
         requestRender();
       })
       .catch((error: unknown) => {
@@ -758,15 +451,9 @@ export function AndromedaField({
       window.removeEventListener("pointermove", handlePointerMove);
       document.removeEventListener("visibilitychange", handleVisibility);
       canvas.removeEventListener("webglcontextlost", handleContextLost);
-      galaxyGroup.remove(points, halo, binaryPoints, logoGroup);
-      geometry.dispose();
-      material.dispose();
-      haloGeometry.dispose();
-      haloMaterial.dispose();
+      stage.remove(logoMesh, binaryPoints);
       logoGeometry.dispose();
       logoMaterial.dispose();
-      emblemGeometry.dispose();
-      emblemMaterial.dispose();
       binaryGeometry.dispose();
       binaryMaterial.dispose();
       logoTexture?.dispose();
