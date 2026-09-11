@@ -319,5 +319,18 @@
     "fa": "FA",
     "en": "EN",
     "label": "Language"
+  },
+  "Chat": {
+    "open": "Open assistant",
+    "close": "Close assistant",
+    "title": "AxynoAI Assistant",
+    "subtitle": "Ask about services and solutions",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "welcome": "Hi! Ask about our services, solutions, or how we work.",
+    "error": "Could not send your message. Please try again shortly.",
+    "empty": "Please enter a message.",
+    "offline": "Chat backend is not configured yet. Set N8N_WEBHOOK_URL."
   }
 }

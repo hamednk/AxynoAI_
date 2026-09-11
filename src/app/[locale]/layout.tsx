@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AxisRail } from "@/components/layout/AxisRail";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 import { routing } from "@/i18n/routing";
 import { site } from "@/lib/site";
 import type { Metadata, Viewport } from "next";
@@ -112,6 +113,7 @@ export default async function LocaleLayout({ children, params }: Props) {
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
+            <ChatWidget />
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

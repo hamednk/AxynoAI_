@@ -1,0 +1,200 @@
+{
+  "name": "AxynoAI RAG Chat (NaraRouter)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "axynoai-chat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Chat Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "axynoai-chat"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $json.body || $json;\nconst message = String(body.message || '').trim();\nconst locale = body.locale === 'en' ? 'en' : 'fa';\nconst sessionId = String(body.sessionId || 'anonymous');\nif (!message) {\n  throw new Error('message is required');\n}\nreturn [{ json: { message, locale, sessionId } }];"
+      },
+      "id": "normalize",
+      "name": "Normalize Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $env.AXYNOAI_KNOWLEDGE_PATH || '/home/node/.n8n/axynoai-knowledge.json' }}",
+        "options": {}
+      },
+      "id": "read-knowledge",
+      "name": "Read Knowledge File",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [
+        480,
+        0
+      ],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const fallbackChunks = [{\"id\":\"fa-company\",\"locale\":\"fa\",\"type\":\"company\",\"title\":\"معرفی شرکت\",\"text\":\"AxynoAI (اکسینو AI). خدمات هوش مصنوعی | طراحی و پیاده‌سازی راهکارهای AI ارائه خدمات تخصصی هوش مصنوعی در تولید محتوا، چت‌بات، CRM، پزشکی، آموزش، املاک، امنیت سایبری، استخراج اطلاعات و اتوماسیون کسب‌وکار. هوش مصنوعی را روی محور کسب‌وکار خود بنشانید — از ایده تا سامانهٔ زنده.\",\"tags\":[\"company\",\"brand\",\"axynoai\"]},{\"id\":\"fa-about\",\"locale\":\"fa\",\"type\":\"about\",\"title\":\"متخصص در تبدیل هوش مصنوعی به راهکارهای واقعی\",\"text\":\"ما با ترکیب دانش تخصصی، تجربه اجرایی و فناوری‌های روز هوش مصنوعی، راهکارهای هوشمندی طراحی و پیاده‌سازی می‌کنیم که به کسب‌وکارها کمک می‌کنند فرآیندهای خود را سریع‌تر، دقیق‌تر و هوشمندتر انجام دهند.\\nاکسینو AI (AxynoAI) یک تیم تخصصی در زمینه هوش مصنوعی، اتوماسیون، توسعه سیستم‌های هوشمند و پیاده‌سازی راهکارهای AI برای سازمان‌ها و کسب‌وکارهاست. تمرکز ما بر اعتماد، تخصص و نتیجه قابل اندازه‌گیری است.\\nتخصص: تسلط بر فناوری‌ها و ابزارهای نوین هوش مصنوعی\\nتجربه: تجربه در طراحی و پیاده‌سازی راهکارهای واقعی کسب‌وکار\\nتیم حرفه‌ای: ترکیبی از متخصصان فنی، محصول و هوش مصنوعی\\nراهکار متناسب با کسب‌وکار: راهکارهای AI را متناسب با نیاز واقعی هر کسب‌وکار طراحی می‌کنیم.\\nفناوری‌های روز: از جدیدترین ابزارها و تکنولوژی‌های هوش مصنوعی استفاده می‌کنیم.\\nتمرکز بر نتیجه: هدف ما صرفاً استفاده از AI نیست؛ بلکه ایجاد نتیجه قابل اندازه‌گیری برای کسب‌وکار است.\\nقابلیت توسعه: راهکارها به شکلی طراحی می‌شوند که در آینده قابلیت توسعه و ارتقا داشته باشند.\\nامنیت و محرمانگی: امنیت اطلاعات و محرمانگی داده‌های کسب‌وکار در طراحی راهکارها مورد توجه قرار می‌گیرد.\\nپشتیبانی و همراهی: از مرحله ایده تا پیاده‌سازی و توسعه در کنار مشتری هستیم.\",\"tags\":[\"about\",\"team\"]},{\"id\":\"fa-service-ai-content\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"هوش مصنوعی در تولید محتوا\",\"text\":\"تولید، مدیریت و بهینه‌سازی محتوای متنی، تصویری و ویدیویی با استفاده از هوش مصنوعی.\\nبا ترکیب مدل‌های زبانی و ابزارهای تولید تصویر و ویدیو، فرآیند تولید محتوا را سریع‌تر، یکپارچه‌تر و متناسب با برند شما طراحی می‌کنیم — از ایده تا انتشار.\\nURL: /services/ai-content\",\"tags\":[\"service\",\"ai-content\"]},{\"id\":\"fa-service-ai-project-management\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"هوش مصنوعی در مدیریت پروژه\",\"text\":\"هوشمندسازی فرآیندهای مدیریت پروژه، تحلیل وظایف، گزارش‌گیری و کمک به تصمیم‌گیری.\\nسیستم‌هایی می‌سازیم که وضعیت پروژه را تحلیل می‌کنند، اولویت‌ها را پیشنهاد می‌دهند و گزارش‌های تصمیم‌محور برای مدیران تولید می‌کنند.\\nURL: /services/ai-project-management\",\"tags\":[\"service\",\"ai-project-management\"]},{\"id\":\"fa-service-ai-chatbot\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"هوش مصنوعی در چت‌بات\",\"text\":\"طراحی و پیاده‌سازی چت‌بات‌های هوشمند برای پاسخ‌گویی، پشتیبانی و تعامل با مشتریان.\\nچت‌بات‌هایی طراحی می‌کنیم که به دانش سازمانی شما متصل‌اند، پاسخ دقیق می‌دهند و تجربه پشتیبانی را در وب، اپ و پیام‌رسان‌ها ارتقا می‌دهند.\\nURL: /services/ai-chatbot\",\"tags\":[\"service\",\"ai-chatbot\"]},{\"id\":\"fa-service-ai-healthcare\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"هوش مصنوعی در پزشکی\",\"text\":\"طراحی راهکارهای هوشمند برای تحلیل اطلاعات، مدیریت فرآیندها و کمک به ارائه خدمات پزشکی.\\nراهکارهای هوشمند برای کلینیک‌ها و سازمان‌های سلامت: تحلیل داده‌ها، بهینه‌سازی فرآیندها و دستیارهای کمکی — با تاکید بر دقت، امنیت و محرمانگی.\\nURL: /services/ai-healthcare\",\"tags\":[\"service\",\"ai-healthcare\"]},{\"id\":\"fa-service-ai-education\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"هوش مصنوعی در آموزش و پرورش\",\"text\":\"هوشمندسازی آموزش، تولید محتوای آموزشی، تحلیل عملکرد و ایجاد دستیارهای آموزشی.\\nاز دستیارهای آموزشی شخصی‌سازی‌شده تا تحلیل پیشرفت یادگیرنده و تولید محتوای آموزشی — یادگیری را هوشمندتر و قابل اندازه‌گیری می‌کنیم.\\nURL: /services/ai-education\",\"tags\":[\"service\",\"ai-education\"]},{\"id\":\"fa-service-telegram-bot\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"طراحی ربات تلگرام\",\"text\":\"طراحی ربات‌های هوشمند تلگرام برای فروش، پشتیبانی، اطلاع‌رسانی، اتوماسیون و تعامل با کاربران.\\nربات‌های تلگرام هوشمند برای فروش، پشتیبانی، اطلاع‌رسانی و اتوماسیون فرآیندها — متصل به CRM، پرداخت و سیستم‌های داخلی شما.\\nURL: /services/telegram-bot\",\"tags\":[\"service\",\"telegram-bot\"]},{\"id\":\"fa-service-ai-real-estate\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"هوش مصنوعی در املاک\",\"text\":\"تحلیل اطلاعات املاک، پیشنهاد هوشمند، دسته‌بندی و جستجوی هوشمند و اتوماسیون فرآیندهای حوزه املاک.\\nجستجوی هوشمند ملک، پیشنهاد متناسب با نیاز مشتری، دسته‌بندی و اتوماسیون پیگیری — برای آژانس‌ها و پلتفرم‌های املاک.\\nURL: /services/ai-real-estate\",\"tags\":[\"service\",\"ai-real-estate\"]},{\"id\":\"fa-service-ai-cybersecurity\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"هوش مصنوعی در امنیت سایبری\",\"text\":\"استفاده از AI برای تحلیل داده‌ها، شناسایی الگوهای مشکوک و کمک به افزایش امنیت سیستم‌ها.\\nتحلیل الگوهای مشکوک، هشدار هوشمند و کمک به تیم امنیت برای واکنش سریع‌تر — مکمل فرآیندهای امنیتی موجود شما.\\nURL: /services/ai-cybersecurity\",\"tags\":[\"service\",\"ai-cybersecurity\"]},{\"id\":\"fa-service-ai-crm\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"هوش مصنوعی در CRM\",\"text\":\"هوشمندسازی CRM، تحلیل مشتریان، پیش‌بینی رفتار و بهبود ارتباط با مشتری.\\nتحلیل رفتار مشتری، امتیازدهی سرنخ، پیش‌بینی نیاز و پیشنهاد اقدام بعدی — CRM شما را به موتور رشد تبدیل می‌کنیم.\\nURL: /services/ai-crm\",\"tags\":[\"service\",\"ai-crm\"]},{\"id\":\"fa-service-ai-retail\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"هوش مصنوعی در حوزه فروشگاهی\",\"text\":\"هوشمندسازی فروشگاه‌ها، پیشنهاد محصول، تحلیل مشتری، اتوماسیون فروش و پشتیبانی.\\nپیشنهاد محصول، شخصی‌سازی تجربه خرید، اتوماسیون پشتیبانی و تحلیل فروش — برای فروشگاه‌های آنلاین و چندکاناله.\\nURL: /services/ai-retail\",\"tags\":[\"service\",\"ai-retail\"]},{\"id\":\"fa-service-ai-extraction\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"استخراج اطلاعات با هوش مصنوعی\",\"text\":\"استخراج، دسته‌بندی و پردازش اطلاعات از اسناد، فایل‌ها، تصاویر و منابع مختلف.\\nاز PDF و تصویر تا ایمیل و فرم‌ها — اطلاعات را استخراج، ساختاردهی و به سیستم‌های شما تزریق می‌کنیم.\\nURL: /services/ai-extraction\",\"tags\":[\"service\",\"ai-extraction\"]},{\"id\":\"fa-service-ai-legal\",\"locale\":\"fa\",\"type\":\"service\",\"title\":\"هوش مصنوعی در امور حقوقی\",\"text\":\"تحلیل و پردازش اسناد حقوقی، جستجوی هوشمند، دسته‌بندی اطلاعات و کمک به فرآیندهای حقوقی.\\nجستجوی هوشمند در اسناد، دسته‌بندی قراردادها و کمک به فرآیندهای حقوقی — با حفظ محرمانگی و کنترل انسانی.\\nURL: /services/ai-legal\",\"tags\":[\"service\",\"ai-legal\"]},{\"id\":\"fa-solution-enterprise-assistant\",\"locale\":\"fa\",\"type\":\"solution\",\"title\":\"دستیار هوش مصنوعی سازمانی\",\"text\":\"دستیار داخلی برای پاسخ به سوالات سازمانی، دسترسی به دانش شرکت و تسریع کارهای روزمره.\\nURL: /solutions\",\"tags\":[\"solution\",\"enterprise-assistant\"]},{\"id\":\"fa-solution-smart-chatbot\",\"locale\":\"fa\",\"type\":\"solution\",\"title\":\"چت‌بات هوشمند\",\"text\":\"تعامل ۲۴ ساعته با مشتریان روی کانال‌های مختلف با درک زمینه و دانش برند شما.\\nURL: /solutions\",\"tags\":[\"solution\",\"smart-chatbot\"]},{\"id\":\"fa-solution-doc-extraction\",\"locale\":\"fa\",\"type\":\"solution\",\"title\":\"سیستم استخراج اطلاعات از اسناد\",\"text\":\"تبدیل اسناد و فایل‌های غیرساختاریافته به داده قابل استفاده در سیستم‌های سازمانی.\\nURL: /solutions\",\"tags\":[\"solution\",\"doc-extraction\"]},{\"id\":\"fa-solution-smart-recommend\",\"locale\":\"fa\",\"type\":\"solution\",\"title\":\"سیستم پیشنهاد هوشمند\",\"text\":\"پیشنهاد محصول، محتوا یا اقدام بعدی بر اساس رفتار و نیاز کاربر.\\nURL: /solutions\",\"tags\":[\"solution\",\"smart-recommend\"]},{\"id\":\"fa-solution-ai-crm\",\"locale\":\"fa\",\"type\":\"solution\",\"title\":\"AI CRM\",\"text\":\"تحلیل مشتریان، پیش‌بینی رفتار و هوشمندسازی پیگیری فروش و پشتیبانی.\\nURL: /solutions\",\"tags\":[\"solution\",\"ai-crm\"]},{\"id\":\"fa-solution-process-automation\",\"locale\":\"fa\",\"type\":\"solution\",\"title\":\"اتوماسیون فرآیندهای سازمانی\",\"text\":\"حذف کارهای تکراری و اتصال سیستم‌ها با جریان‌های هوشمند و قابل کنترل.\\nURL: /solutions\",\"tags\":[\"solution\",\"process-automation\"]},{\"id\":\"fa-solution-data-analytics\",\"locale\":\"fa\",\"type\":\"solution\",\"title\":\"سیستم تحلیل داده\",\"text\":\"تبدیل داده خام به بینش قابل اقدام برای مدیران و تیم‌های عملیاتی.\\nURL: /solutions\",\"tags\":[\"solution\",\"data-analytics\"]},{\"id\":\"fa-solution-sales-assistant\",\"locale\":\"fa\",\"type\":\"solution\",\"title\":\"دستیار هوشمند فروش\",\"text\":\"کمک به تیم فروش در پیگیری سرنخ، پیشنهاد پاسخ و اولویت‌بندی فرصت‌ها.\\nURL: /solutions\",\"tags\":[\"solution\",\"sales-assistant\"]},{\"id\":\"fa-solution-support-assistant\",\"locale\":\"fa\",\"type\":\"solution\",\"title\":\"دستیار هوشمند پشتیبانی\",\"text\":\"پاسخ سریع‌تر به تیکت‌ها، پیشنهاد راه‌حل و کاهش بار تیم پشتیبانی.\\nURL: /solutions\",\"tags\":[\"solution\",\"support-assistant\"]},{\"id\":\"fa-process\",\"locale\":\"fa\",\"type\":\"process\",\"title\":\"فرآیند همکاری\",\"text\":\"01. شناخت: شناخت کسب‌وکار، چالش‌ها و نیازها\\n02. تحلیل: تحلیل فرآیندها و شناسایی فرصت‌های استفاده از AI\\n03. طراحی راهکار: طراحی معماری و راهکار متناسب با نیاز\\n04. توسعه: پیاده‌سازی و اتصال راهکار به سیستم‌های موجود\\n05. تست و بهینه‌سازی: ارزیابی عملکرد و بهینه‌سازی سیستم\\n06. استقرار و پشتیبانی: استقرار نهایی و پشتیبانی و توسعه مستمر\",\"tags\":[\"process\"]},{\"id\":\"fa-contact\",\"locale\":\"fa\",\"type\":\"contact\",\"title\":\"شروع یک گفت‌وگوی تخصصی\",\"text\":\"ایده یا نیازتان را بگویید؛ کوتاه بررسی می‌کنیم و مسیر مناسب را پیشنهاد می‌دهیم.\\nPhone: +98 912 72 74 655\\nEmail: info@AxynoAI.com\\nURL: /contact\",\"tags\":[\"contact\"]},{\"id\":\"fa-faq\",\"locale\":\"fa\",\"type\":\"faq\",\"title\":\"سوالات متداول\",\"text\":\"اکسینو AI خدمات طراحی و پیاده‌سازی راهکارهای هوش مصنوعی ارائه می‌دهد. برای مشاوره رایگان به /contact بروید یا با +98 912 72 74 655 و info@AxynoAI.com تماس بگیرید.\",\"tags\":[\"faq\"]},{\"id\":\"en-company\",\"locale\":\"en\",\"type\":\"company\",\"title\":\"Company overview\",\"text\":\"AxynoAI (Axyno AI). AI Services | Design & Implementation of AI Solutions Specialized AI services in content creation, chatbots, CRM, healthcare, education, real estate, cybersecurity, data extraction, and business automation. Put AI on the axis of your business — from idea to a live system.\",\"tags\":[\"company\",\"brand\",\"axynoai\"]},{\"id\":\"en-about\",\"locale\":\"en\",\"type\":\"about\",\"title\":\"Specialists in turning AI into real solutions\",\"text\":\"We combine deep expertise, delivery experience, and modern AI to design and implement intelligent solutions that help businesses work faster, more accurately, and smarter.\\nAxynoAI is a specialist team in artificial intelligence, automation, intelligent systems, and AI delivery for organizations and businesses. We focus on trust, expertise, and measurable results.\\nExpertise: Mastery of modern AI technologies and tools\\nExperience: Hands-on design and delivery of real business solutions\\nPro team: A mix of engineering, product, and AI specialists\\nBusiness-fit solutions: We design AI solutions around the real needs of each business.\\nModern technology: We use the latest AI tools and technologies.\\nResults-focused: Our goal is not AI for its own sake — it is measurable business outcomes.\\nBuilt to scale: Solutions are designed so they can grow and evolve over time.\\nSecurity & privacy: Data security and confidentiality are built into every solution.\\nOngoing partnership: We stay with you from idea through delivery and continued growth.\",\"tags\":[\"about\",\"team\"]},{\"id\":\"en-service-ai-content\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI for content creation\",\"text\":\"Create, manage, and optimize text, image, and video content with AI.\\nWe combine language models with image and video tools to make content production faster, more cohesive, and on-brand — from idea to publish.\\nURL: /services/ai-content\",\"tags\":[\"service\",\"ai-content\"]},{\"id\":\"en-service-ai-project-management\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI for project management\",\"text\":\"Smarter project workflows, task analysis, reporting, and decision support.\\nWe build systems that analyze project status, suggest priorities, and produce decision-ready reports for leaders.\\nURL: /services/ai-project-management\",\"tags\":[\"service\",\"ai-project-management\"]},{\"id\":\"en-service-ai-chatbot\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI chatbots\",\"text\":\"Design and ship smart chatbots for support, sales, and customer engagement.\\nChatbots connected to your organizational knowledge that answer accurately and elevate support across web, apps, and messengers.\\nURL: /services/ai-chatbot\",\"tags\":[\"service\",\"ai-chatbot\"]},{\"id\":\"en-service-ai-healthcare\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI in healthcare\",\"text\":\"Intelligent solutions for analysis, process management, and care delivery support.\\nSmart solutions for clinics and health organizations: data analysis, process optimization, and assistive agents — with accuracy, security, and privacy.\\nURL: /services/ai-healthcare\",\"tags\":[\"service\",\"ai-healthcare\"]},{\"id\":\"en-service-ai-education\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI in education\",\"text\":\"Smarter learning, educational content, performance analysis, and teaching assistants.\\nFrom personalized tutors to learner analytics and content generation — making learning smarter and measurable.\\nURL: /services/ai-education\",\"tags\":[\"service\",\"ai-education\"]},{\"id\":\"en-service-telegram-bot\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"Telegram bot design\",\"text\":\"Smart Telegram bots for sales, support, notifications, automation, and engagement.\\nIntelligent Telegram bots for sales, support, alerts, and process automation — connected to your CRM, payments, and internal systems.\\nURL: /services/telegram-bot\",\"tags\":[\"service\",\"telegram-bot\"]},{\"id\":\"en-service-ai-real-estate\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI in real estate\",\"text\":\"Property analysis, smart recommendations, classification, search, and process automation.\\nSmart property search, need-matched recommendations, classification, and follow-up automation — for agencies and real-estate platforms.\\nURL: /services/ai-real-estate\",\"tags\":[\"service\",\"ai-real-estate\"]},{\"id\":\"en-service-ai-cybersecurity\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI in cybersecurity\",\"text\":\"Use AI to analyze data, spot suspicious patterns, and strengthen system security.\\nSuspicious-pattern analysis, smart alerts, and faster response support — complementing your existing security processes.\\nURL: /services/ai-cybersecurity\",\"tags\":[\"service\",\"ai-cybersecurity\"]},{\"id\":\"en-service-ai-crm\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI in CRM\",\"text\":\"Smarter CRM, customer analysis, behavior prediction, and better relationships.\\nCustomer behavior analysis, lead scoring, need prediction, and next-best-action suggestions — turning your CRM into a growth engine.\\nURL: /services/ai-crm\",\"tags\":[\"service\",\"ai-crm\"]},{\"id\":\"en-service-ai-retail\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI for retail\",\"text\":\"Smarter stores, product recommendations, customer analysis, sales and support automation.\\nProduct recommendations, personalized shopping, support automation, and sales analytics — for online and omnichannel retail.\\nURL: /services/ai-retail\",\"tags\":[\"service\",\"ai-retail\"]},{\"id\":\"en-service-ai-extraction\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI data extraction\",\"text\":\"Extract, classify, and process information from documents, files, images, and more.\\nFrom PDFs and images to emails and forms — we extract, structure, and inject data into your systems.\\nURL: /services/ai-extraction\",\"tags\":[\"service\",\"ai-extraction\"]},{\"id\":\"en-service-ai-legal\",\"locale\":\"en\",\"type\":\"service\",\"title\":\"AI for legal work\",\"text\":\"Legal document analysis, smart search, classification, and process support.\\nSmart document search, contract classification, and legal workflow support — with confidentiality and human control.\\nURL: /services/ai-legal\",\"tags\":[\"service\",\"ai-legal\"]},{\"id\":\"en-solution-enterprise-assistant\",\"locale\":\"en\",\"type\":\"solution\",\"title\":\"Enterprise AI assistant\",\"text\":\"An internal assistant for company Q&A, knowledge access, and faster everyday work.\\nURL: /solutions\",\"tags\":[\"solution\",\"enterprise-assistant\"]},{\"id\":\"en-solution-smart-chatbot\",\"locale\":\"en\",\"type\":\"solution\",\"title\":\"Smart chatbot\",\"text\":\"24/7 customer engagement across channels with context and your brand knowledge.\\nURL: /solutions\",\"tags\":[\"solution\",\"smart-chatbot\"]},{\"id\":\"en-solution-doc-extraction\",\"locale\":\"en\",\"type\":\"solution\",\"title\":\"Document information extraction\",\"text\":\"Turn unstructured documents and files into usable organizational data.\\nURL: /solutions\",\"tags\":[\"solution\",\"doc-extraction\"]},{\"id\":\"en-solution-smart-recommend\",\"locale\":\"en\",\"type\":\"solution\",\"title\":\"Smart recommendation system\",\"text\":\"Recommend products, content, or next actions based on user behavior and needs.\\nURL: /solutions\",\"tags\":[\"solution\",\"smart-recommend\"]},{\"id\":\"en-solution-ai-crm\",\"locale\":\"en\",\"type\":\"solution\",\"title\":\"AI CRM\",\"text\":\"Customer analysis, behavior prediction, and smarter sales and support follow-ups.\\nURL: /solutions\",\"tags\":[\"solution\",\"ai-crm\"]},{\"id\":\"en-solution-process-automation\",\"locale\":\"en\",\"type\":\"solution\",\"title\":\"Enterprise process automation\",\"text\":\"Remove repetitive work and connect systems with controllable smart flows.\\nURL: /solutions\",\"tags\":[\"solution\",\"process-automation\"]},{\"id\":\"en-solution-data-analytics\",\"locale\":\"en\",\"type\":\"solution\",\"title\":\"Data analytics system\",\"text\":\"Turn raw data into actionable insight for leaders and operations teams.\\nURL: /solutions\",\"tags\":[\"solution\",\"data-analytics\"]},{\"id\":\"en-solution-sales-assistant\",\"locale\":\"en\",\"type\":\"solution\",\"title\":\"Smart sales assistant\",\"text\":\"Help sales teams follow leads, suggest replies, and prioritize opportunities.\\nURL: /solutions\",\"tags\":[\"solution\",\"sales-assistant\"]},{\"id\":\"en-solution-support-assistant\",\"locale\":\"en\",\"type\":\"solution\",\"title\":\"Smart support assistant\",\"text\":\"Faster ticket replies, solution suggestions, and less load on support teams.\\nURL: /solutions\",\"tags\":[\"solution\",\"support-assistant\"]},{\"id\":\"en-process\",\"locale\":\"en\",\"type\":\"process\",\"title\":\"Delivery process\",\"text\":\"01. Discover: Understand the business, challenges, and needs\\n02. Analyze: Analyze processes and find AI opportunities\\n03. Design: Design architecture and a fit-for-purpose solution\\n04. Build: Implement and connect the solution to existing systems\\n05. Test & optimize: Measure performance and refine the system\\n06. Deploy & support: Final deployment with ongoing support and growth\",\"tags\":[\"process\"]},{\"id\":\"en-contact\",\"locale\":\"en\",\"type\":\"contact\",\"title\":\"Start a specialist conversation\",\"text\":\"Share your idea or need; we will review it briefly and suggest the right path.\\nPhone: +98 912 72 74 655\\nEmail: info@AxynoAI.com\\nURL: /contact\",\"tags\":[\"contact\"]},{\"id\":\"en-faq\",\"locale\":\"en\",\"type\":\"faq\",\"title\":\"FAQ\",\"text\":\"AxynoAI designs and implements AI solutions. For a free consultation visit /contact or reach +98 912 72 74 655 / info@AxynoAI.com.\",\"tags\":[\"faq\"]}];\n\nfunction tokenize(text) {\n  return String(text || '')\n    .toLowerCase()\n    .split(/[^\\p{L}\\p{N}]+/u)\n    .filter((token) => token.length > 1);\n}\n\nfunction scoreChunk(queryTokens, chunk) {\n  const hay = tokenize(`${chunk.title} ${chunk.text} ${(chunk.tags || []).join(' ')}`);\n  if (!hay.length || !queryTokens.length) return 0;\n  const set = new Set(hay);\n  let hits = 0;\n  for (const token of queryTokens) {\n    if (set.has(token)) hits += 1;\n  }\n  const titleHits = tokenize(chunk.title).filter((token) => queryTokens.includes(token)).length;\n  return hits + titleHits * 2;\n}\n\nconst input = $('Normalize Input').first().json;\nlet chunks = fallbackChunks;\n\ntry {\n  const binary = $input.first().binary?.data;\n  if (binary?.data) {\n    const parsed = JSON.parse(Buffer.from(binary.data, 'base64').toString('utf8'));\n    if (Array.isArray(parsed.chunks) && parsed.chunks.length) {\n      chunks = parsed.chunks;\n    }\n  }\n} catch {\n  // keep fallback chunks\n}\n\nconst queryTokens = tokenize(input.message);\nconst ranked = chunks\n  .filter((chunk) => chunk.locale === input.locale)\n  .map((chunk) => ({ ...chunk, score: scoreChunk(queryTokens, chunk) }))\n  .sort((a, b) => b.score - a.score);\n\nconst top = (ranked[0]?.score > 0 ? ranked.slice(0, 6) : ranked.slice(0, 4));\nconst context = top\n  .map((chunk, index) => `[${index + 1}] ${chunk.title}\\n${chunk.text}`)\n  .join('\\n\\n');\n\nreturn [{\n  json: {\n    message: input.message,\n    locale: input.locale,\n    sessionId: input.sessionId,\n    context: context || (input.locale === 'fa'\n      ? 'اطلاعات کافی در پایگاه دانش یافت نشد.'\n      : 'No relevant knowledge found.'),\n    sources: top.map((chunk) => ({\n      id: chunk.id,\n      title: chunk.title,\n      score: chunk.score,\n    })),\n  },\n}];"
+      },
+      "id": "retrieve",
+      "name": "Retrieve Top Chunks",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.NARAROUTER_BASE_URL || 'https://router.bynara.id/v1' }}/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'agnes-2.5-flash', response_format: { type: 'json_object' }, messages: [ { role: 'system', content: $json.locale === 'en' ? 'You are the AxynoAI website assistant. Use ONLY the provided CONTEXT. Reply language must match locale. If the answer is missing from CONTEXT, say you do not know and suggest contacting info@AxynoAI.com or +98 912 72 74 655 /contact. Output ONLY valid JSON with this shape: {\"reply\":\"string\"}. Be concise and professional.' : 'شما دستیار وب‌سایت اکسینو AI (AxynoAI) هستید. فقط از CONTEXT استفاده‌کن. زبان پاسخ باید مطابق locale باشد. اگر پاسخ در CONTEXT نیست، صادقانه بگو نمی‌دانی و به info@AxynoAI.com یا +98 912 72 74 655 و /contact هدایت کن. خروجی فقط JSON معتبر باشد با این ساختار: {\"reply\":\"string\"}. مختصر و حرفه‌ای باش.' }, { role: 'user', content: JSON.stringify($json) } ], temperature: 0.3 }) }}",
+        "options": {}
+      },
+      "id": "chat-completion",
+      "name": "Chat Completion (NaraRouter)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        980,
+        0
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "NARAROUTER_HEADER_AUTH",
+          "name": "NaraRouter"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const locale = $('Retrieve Top Chunks').first().json.locale;\nconst fallback = locale === 'fa'\n  ? 'الان نتوانستم پاسخ بسازم. لطفاً دوباره تلاش کنید یا از صفحه تماس پیام بگذارید.'\n  : 'I could not generate a reply right now. Please try again or use the contact page.';\n\nconst content = $json.choices?.[0]?.message?.content?.trim() || '';\nlet reply = fallback;\n\nif (content) {\n  try {\n    const parsed = JSON.parse(content);\n    if (parsed && typeof parsed.reply === 'string' && parsed.reply.trim()) {\n      reply = parsed.reply.trim();\n    } else if (typeof parsed === 'string' && parsed.trim()) {\n      reply = parsed.trim();\n    }\n  } catch {\n    reply = content;\n  }\n}\n\nreturn [{ json: { reply } }];"
+      },
+      "id": "format-reply",
+      "name": "Format Reply",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "respond",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1500,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Chat Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Input": {
+      "main": [
+        [
+          {
+            "node": "Read Knowledge File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Knowledge File": {
+      "main": [
+        [
+          {
+            "node": "Retrieve Top Chunks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Retrieve Top Chunks": {
+      "main": [
+        [
+          {
+            "node": "Chat Completion (NaraRouter)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Completion (NaraRouter)": {
+      "main": [
+        [
+          {
+            "node": "Format Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Reply": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": [
+    {
+      "name": "axynoai"
+    },
+    {
+      "name": "rag"
+    }
+  ]
+}
