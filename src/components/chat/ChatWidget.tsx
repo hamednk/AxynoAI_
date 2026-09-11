@@ -122,7 +122,7 @@ export function ChatWidget() {
                 >
                   {t("title")}
                 </p>
-                <p className="font-mono-signal mt-1 text-[10px] text-steel">
+                <p className="mt-1 text-[10px] text-steel">
                   {t("subtitle")}
                 </p>
               </div>
@@ -159,7 +159,7 @@ export function ChatWidget() {
                 </div>
               ))}
               {pending ? (
-                <p className="font-mono-signal me-auto text-[11px] text-steel">
+                <p className="me-auto text-[11px] text-steel">
                   {t("thinking")}
                 </p>
               ) : null}
