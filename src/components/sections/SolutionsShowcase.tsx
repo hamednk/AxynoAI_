@@ -18,48 +18,55 @@ export async function SolutionsShowcase({
   const list = limit ? solutionMetas.slice(0, limit) : solutionMetas;
 
   return (
-    <section id="solutions" className="bg-surface py-14 sm:py-20 lg:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section id="solutions" className="relative overflow-hidden bg-surface py-16 sm:py-24 lg:py-28">
+      <div className="grid-lines pointer-events-none absolute inset-0 opacity-40" aria-hidden />
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {!hideHeading ? (
           <FadeIn>
-            <SectionHeading eyebrow={t("eyebrow")} title={t("title")} />
+            <SectionHeading
+              eyebrow={t("eyebrow")}
+              title={t("title")}
+              subtitle={t("subtitle")}
+            />
           </FadeIn>
         ) : null}
-        <div className="space-y-3">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((item, i) => (
-            <FadeIn key={item.slug} delay={(i % 4) * 0.04}>
-              <article className="group grid min-w-0 gap-4 border border-card-border bg-card p-4 transition hover:border-accent/40 sm:grid-cols-[3rem_minmax(0,1fr)_auto] sm:items-center sm:gap-6 sm:p-6">
-                <div className="flex size-12 items-center justify-center border border-card-border text-accent transition group-hover:border-accent/40 group-hover:bg-accent-soft">
-                  <AppIcon name={item.icon} className="size-5" strokeWidth={1.5} />
+            <FadeIn key={item.slug} delay={(i % 3) * 0.05}>
+              <Link
+                href="/solutions"
+                className="group relative flex h-full min-w-0 flex-col overflow-hidden rounded-2xl border border-card-border bg-card p-5 transition duration-500 hover:-translate-y-1 hover:border-accent/50 hover:shadow-[var(--shadow-card-hover)] sm:p-6"
+              >
+                <span
+                  className="pointer-events-none absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-gradient-to-r from-transparent via-accent-bright to-transparent transition duration-700 group-hover:scale-x-100"
+                  aria-hidden
+                />
+                <div className="mb-5 flex items-center gap-4">
+                  <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-card-border text-accent transition duration-500 group-hover:border-accent/40 group-hover:bg-accent-soft group-hover:shadow-[0_0_24px_-8px_var(--glow)]">
+                    <AppIcon name={item.icon} className="size-5" strokeWidth={1.5} />
+                  </span>
+                  <span className="font-mono-signal text-[10px] text-steel">
+                    SOL · {String(i + 1).padStart(2, "0")}
+                  </span>
                 </div>
-                <div className="min-w-0">
-                  <div className="mb-1 flex items-center gap-3">
-                    <span className="font-mono-signal text-[10px] text-muted">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <h3 className="text-base font-bold leading-7 text-pretty sm:text-lg">
-                      {t(`items.${item.slug}.title`)}
-                    </h3>
-                  </div>
-                  <p className="text-sm leading-7 text-muted">
-                    {t(`items.${item.slug}.description`)}
-                  </p>
-                </div>
-                <Link
-                  href="/solutions"
-                  className="inline-flex items-center gap-2 text-sm text-accent hover:gap-3"
-                >
+                <h3 className="mb-2 text-base font-bold leading-7 text-pretty sm:text-lg">
+                  {t(`items.${item.slug}.title`)}
+                </h3>
+                <p className="flex-1 text-sm leading-7 text-muted">
+                  {t(`items.${item.slug}.description`)}
+                </p>
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-accent transition-all group-hover:gap-3">
                   {t("details")}
                   <ArrowLeft className="hidden size-4 rtl:inline" />
                   <ArrowRight className="size-4 rtl:hidden" />
-                </Link>
-              </article>
+                </span>
+              </Link>
             </FadeIn>
           ))}
         </div>
         {limit ? (
-          <div className="mt-10 flex justify-start">
-            <Button href="/solutions" variant="secondary" className="w-full sm:w-auto">
+          <div className="mt-10 flex justify-center">
+            <Button href="/solutions" variant="secondary" className="min-h-12 w-full sm:w-auto">
               {t("viewAll")}
             </Button>
           </div>

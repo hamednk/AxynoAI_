@@ -44,14 +44,21 @@
   "Hero": {
     "eyebrow": "SIG · 01 / INTELLIGENCE ON AXIS",
     "nameFa": "Axyno AI",
+    "titleBrand": "AxynoAI",
     "subtitle": "Put AI on the axis of your business — from idea to a live system.",
     "ctaPrimary": "Free consultation",
-    "ctaSecondary": "View services"
+    "ctaSecondary": "View services",
+    "marqueeHint": "Services on axis"
   },
   "AboutBrief": {
     "eyebrow": "SIG · 02 / ABOUT",
     "title": "Specialists in turning AI into real solutions",
     "subtitle": "We combine deep expertise, delivery experience, and modern AI to design and implement intelligent solutions that help businesses work faster, more accurately, and smarter.",
+    "stats": {
+      "services": { "value": 12, "label": "Specialized AI services" },
+      "industries": { "value": 12, "label": "Industries & domains" },
+      "steps": { "value": 6, "label": "Steps to deployment" }
+    },
     "features": {
       "expertise": {
         "title": "Expertise",
@@ -272,7 +279,8 @@
     "title": "Ready to make your business smarter?",
     "subtitle": "If you have an idea for using AI in your business, talk to us. We will review your needs and recommend the best path.",
     "ctaPrimary": "Start a specialist conversation",
-    "ctaSecondary": "Get a consultation"
+    "ctaSecondary": "Get a consultation",
+    "askAssistant": "Ask the assistant"
   },
   "About": {
     "pageTitle": "About us",
@@ -324,13 +332,28 @@
     "open": "Open assistant",
     "close": "Close assistant",
     "title": "AxynoAI Assistant",
-    "subtitle": "Ask about services and solutions",
+    "subtitle": "Accurate answers about services, solutions, and working with us",
     "placeholder": "Type your message...",
     "send": "Send",
+    "stop": "Stop",
+    "retry": "Retry",
+    "newChat": "New chat",
+    "online": "Online",
     "thinking": "Thinking...",
-    "welcome": "Hi! Ask about our services, solutions, or how we work.",
+    "welcome": "Hi! I'm the AxynoAI assistant. Ask about services, industries, our process, or contact.",
     "error": "Could not send your message. Please try again shortly.",
     "empty": "Please enter a message.",
-    "offline": "Chat backend is not configured yet. Set N8N_WEBHOOK_URL."
+    "offline": "Chat is not configured. Set NARAROUTER_API_KEY.",
+    "suggestions": {
+      "services": "What services do you offer?",
+      "chatbot": "How does your smart chatbot work?",
+      "process": "What is your delivery process?",
+      "contact": "How do I book a consultation?"
+    },
+    "followUps": {
+      "pricing": "Roughly how much does it cost?",
+      "timeline": "How long do projects usually take?",
+      "consult": "I want a free consultation"
+    }
   }
 }

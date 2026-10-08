@@ -5,7 +5,10 @@ export type RagChunkType =
   | "about"
   | "process"
   | "contact"
-  | "faq";
+  | "faq"
+  | "projects"
+  | "industries"
+  | "navigation";
 
 export type RagChunk = {
   id: string;
@@ -35,11 +38,24 @@ type LocaleMessages = {
   Industries: { title: string; items: string[] };
   Contact: { title: string; subtitle: string };
   FinalCTA: { title: string; subtitle: string };
+  Projects: {
+    title: string;
+    subtitle: string;
+    pageDescription: string;
+  };
 };
 
 import fa from "../../../messages/fa.json";
 import en from "../../../messages/en.json";
 import { site } from "@/lib/site";
+import { buildExtraChunks } from "./extras";
+
+function pathFor(locale: "fa" | "en", href: string) {
+  if (locale === "en") {
+    return href === "/" ? "/en" : `/en${href}`;
+  }
+  return href;
+}
 
 function buildLocaleChunks(
   locale: "fa" | "en",
@@ -59,6 +75,7 @@ function buildLocaleChunks(
       messages.Hero.subtitle,
       messages.FinalCTA.title,
       messages.FinalCTA.subtitle,
+      `Home: ${pathFor(locale, "/")}`,
     ].join(" "),
     tags: ["company", "brand", "axynoai"],
   });
@@ -77,6 +94,7 @@ function buildLocaleChunks(
       ...Object.values(messages.WhyUs.items).map(
         (item) => `${item.title}: ${item.description}`,
       ),
+      `About page: ${pathFor(locale, "/about")}`,
     ].join("\n"),
     tags: ["about", "team", "principles"],
   });
@@ -87,7 +105,7 @@ function buildLocaleChunks(
       locale,
       type: "service",
       title: item.title,
-      text: `${item.short}\n${item.description}\nURL: /services/${slug}`,
+      text: `${item.short}\n${item.description}\nURL: ${pathFor(locale, `/services/${slug}`)}`,
       tags: ["service", slug],
     });
   }
@@ -98,7 +116,7 @@ function buildLocaleChunks(
       locale,
       type: "solution",
       title: item.title,
-      text: `${item.description}\nURL: /solutions`,
+      text: `${item.description}\nURL: ${pathFor(locale, "/solutions")}`,
       tags: ["solution", slug],
     });
   }
@@ -117,10 +135,26 @@ function buildLocaleChunks(
   chunks.push({
     id: `${locale}-industries`,
     locale,
-    type: "about",
+    type: "industries",
     title: messages.Industries.title,
-    text: messages.Industries.items.join("، "),
+    text: messages.Industries.items.join(locale === "fa" ? "، " : ", "),
     tags: ["industries"],
+  });
+
+  chunks.push({
+    id: `${locale}-projects`,
+    locale,
+    type: "projects",
+    title: messages.Projects.title,
+    text: [
+      messages.Projects.subtitle,
+      messages.Projects.pageDescription,
+      `Projects page: ${pathFor(locale, "/projects")}`,
+      locale === "fa"
+        ? "نمونه‌های مفهومی راهکارها تا زمان انتشار کیس‌استادی واقعی نمایش داده می‌شوند."
+        : "Concept samples are shown until real case studies are published.",
+    ].join("\n"),
+    tags: ["projects", "portfolio", "case-studies"],
   });
 
   chunks.push({
@@ -132,7 +166,7 @@ function buildLocaleChunks(
       messages.Contact.subtitle,
       `Phone: ${site.phoneDisplay} (${site.phone})`,
       `Email: ${site.email}`,
-      "Website contact page: /contact",
+      `Contact page: ${pathFor(locale, "/contact")}`,
     ].join("\n"),
     tags: ["contact", "phone", "email"],
   });
@@ -158,6 +192,8 @@ function buildLocaleChunks(
           ].join("\n"),
     tags: ["faq", "consult"],
   });
+
+  chunks.push(...buildExtraChunks(locale));
 
   return chunks;
 }

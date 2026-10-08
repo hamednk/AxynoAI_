@@ -9,8 +9,13 @@ import {
   useTransform,
 } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { MagneticButton } from "@/components/ui/MagneticButton";
+import { Marquee } from "@/components/ui/Marquee";
 import { AxisField } from "@/components/visuals/AxisField";
+import { serviceMetas } from "@/lib/services";
+import { AppIcon } from "@/lib/icons";
 
 const AndromedaField = dynamic(
   () =>
@@ -25,6 +30,7 @@ export function Hero() {
   const [sceneReady, setSceneReady] = useState(false);
   const reduce = useReducedMotion();
   const t = useTranslations("Hero");
+  const tServices = useTranslations("Services");
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -76,13 +82,17 @@ export function Hero() {
         aria-hidden
       />
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl min-w-0 flex-col justify-end px-4 pb-12 pt-24 sm:px-6 sm:pb-16 sm:pt-28 lg:justify-center lg:px-8 lg:pb-24 lg:pt-20">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl min-w-0 flex-col justify-end px-4 pb-28 pt-24 sm:px-6 sm:pb-32 sm:pt-28 lg:justify-center lg:px-8 lg:pb-36 lg:pt-20">
         <motion.p
-          className="font-mono-signal mb-3 text-[10px] text-steel sm:mb-4 sm:text-[11px]"
+          className="font-mono-signal mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-card-border bg-background/40 px-3 py-1.5 text-[10px] text-steel backdrop-blur sm:mb-5 sm:text-[11px]"
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
+          <span className="relative flex size-2">
+            <span className="absolute inline-flex size-full animate-ping rounded-full bg-accent-bright opacity-60 motion-reduce:animate-none" />
+            <span className="relative inline-flex size-2 rounded-full bg-accent-bright" />
+          </span>
           {t("eyebrow")}
         </motion.p>
 
@@ -92,7 +102,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         >
-          AxynoAI
+          {t("titleBrand")}
         </motion.h1>
 
         <motion.p
@@ -119,14 +129,53 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.22 }}
         >
-          <Button href="/contact" className="w-full sm:w-auto">
-            {t("ctaPrimary")}
-          </Button>
-          <Button href="/services" variant="secondary" className="w-full sm:w-auto">
-            {t("ctaSecondary")}
-          </Button>
+          <MagneticButton className="w-full sm:w-auto">
+            <Button
+              href="/contact"
+              className="min-h-12 w-full shadow-[0_10px_40px_-12px_var(--glow)] sm:w-auto sm:px-7"
+            >
+              {t("ctaPrimary")}
+            </Button>
+          </MagneticButton>
+          <MagneticButton className="w-full sm:w-auto" strength={0.18}>
+            <Button
+              href="/services"
+              variant="secondary"
+              className="min-h-12 w-full backdrop-blur sm:w-auto sm:px-7"
+            >
+              {t("ctaSecondary")}
+            </Button>
+          </MagneticButton>
         </motion.div>
       </div>
+
+      <motion.div
+        className="absolute inset-x-0 bottom-0 z-20 border-t border-card-border/60 bg-background/40 py-3 backdrop-blur-md sm:py-4"
+        initial={reduce ? false : { opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.4 }}
+      >
+        <span className="sr-only">{t("marqueeHint")}</span>
+        <Marquee duration={55} gap="2.5rem">
+          {serviceMetas.map((service) => (
+            <span
+              key={service.slug}
+              className="flex items-center gap-2.5 text-xs font-semibold whitespace-nowrap text-ink-soft sm:text-sm"
+            >
+              <AppIcon name={service.icon} className="size-4 text-accent" strokeWidth={1.6} />
+              {tServices(`items.${service.slug}.title`)}
+            </span>
+          ))}
+        </Marquee>
+      </motion.div>
+
+      <a
+        href="#about-brief"
+        className="absolute bottom-20 end-4 z-20 hidden size-11 items-center justify-center rounded-full border border-card-border bg-background/40 text-steel backdrop-blur transition hover:border-accent hover:text-accent sm:end-8 sm:flex lg:bottom-24"
+        aria-label="Scroll"
+      >
+        <ArrowDown className="size-4 motion-safe:animate-bounce" />
+      </a>
     </section>
   );
 }

@@ -4,7 +4,7 @@ import { cn } from "@/lib/cn";
 type ButtonProps = {
   href?: string;
   children: React.ReactNode;
-  variant?: "primary" | "secondary" | "ghost";
+  variant?: "primary" | "secondary" | "ghost" | "light";
   className?: string;
   type?: "button" | "submit";
   onClick?: () => void;
@@ -25,6 +25,8 @@ export function Button({
     variant === "secondary" &&
       "border border-card-border bg-card/80 text-foreground hover:border-accent/50 hover:text-accent",
     variant === "ghost" && "text-muted hover:text-accent",
+    variant === "light" &&
+      "bg-white text-[#030712] hover:bg-[#e0f9ff] hover:shadow-[0_0_32px_-6px_rgba(0,229,255,0.7)] sm:[clip-path:polygon(0_0,100%_0,100%_70%,92%_100%,0_100%)]",
     className,
   );
 

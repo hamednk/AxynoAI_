@@ -2,7 +2,7 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { JetBrains_Mono, Michroma, Syne, Vazirmatn } from "next/font/google";
-import { ThemeProvider } from "@/components/providers/ThemeProvider";
+import { ThemeProvider, ThemeScript } from "@/components/providers/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { AxisRail } from "@/components/layout/AxisRail";
@@ -107,6 +107,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       suppressHydrationWarning
     >
       <body className="relative flex min-h-full min-w-0 flex-col font-sans antialiased">
+        <ThemeScript />
         <ThemeProvider>
           <NextIntlClientProvider messages={messages}>
             <AxisRail />

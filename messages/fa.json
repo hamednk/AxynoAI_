@@ -18,11 +18,11 @@
   },
   "Footer": {
     "blurb": "طراحی و پیاده‌سازی راهکارهای هوش مصنوعی روی محور واقعی کسب‌وکار شما.",
-    "services": "Services",
-    "solutions": "Solutions",
-    "company": "Company",
-    "contact": "Contact",
-    "rights": "ALL RIGHTS RESERVED",
+    "services": "خدمات",
+    "solutions": "راهکارها",
+    "company": "شرکت",
+    "contact": "تماس",
+    "rights": "تمامی حقوق محفوظ است",
     "serviceLabels": {
       "ai-content": "تولید محتوا",
       "ai-chatbot": "چت‌بات",
@@ -34,24 +34,31 @@
       "ai-cybersecurity": "امنیت سایبری"
     },
     "solutionLabels": {
-      "automation": "AI Automation",
-      "assistant": "AI Assistant",
-      "chatbot": "AI Chatbot",
-      "crm": "AI CRM",
-      "extraction": "Intelligent Data Extraction"
+      "automation": "اتوماسیون هوشمند",
+      "assistant": "دستیار هوشمند",
+      "chatbot": "چت‌بات هوشمند",
+      "crm": "CRM هوشمند",
+      "extraction": "استخراج هوشمند اطلاعات"
     }
   },
   "Hero": {
     "eyebrow": "SIG · 01 / INTELLIGENCE ON AXIS",
     "nameFa": "اکسینو AI",
+    "titleBrand": "AxynoAI",
     "subtitle": "هوش مصنوعی را روی محور کسب‌وکار خود بنشانید — از ایده تا سامانهٔ زنده.",
     "ctaPrimary": "دریافت مشاوره رایگان",
-    "ctaSecondary": "مشاهده خدمات"
+    "ctaSecondary": "مشاهده خدمات",
+    "marqueeHint": "خدمات روی محور"
   },
   "AboutBrief": {
     "eyebrow": "SIG · 02 / ABOUT",
     "title": "متخصص در تبدیل هوش مصنوعی به راهکارهای واقعی",
     "subtitle": "ما با ترکیب دانش تخصصی، تجربه اجرایی و فناوری‌های روز هوش مصنوعی، راهکارهای هوشمندی طراحی و پیاده‌سازی می‌کنیم که به کسب‌وکارها کمک می‌کنند فرآیندهای خود را سریع‌تر، دقیق‌تر و هوشمندتر انجام دهند.",
+    "stats": {
+      "services": { "value": 12, "label": "خدمت تخصصی AI" },
+      "industries": { "value": 12, "label": "صنعت و حوزه کاربرد" },
+      "steps": { "value": 6, "label": "گام تا استقرار" }
+    },
     "features": {
       "expertise": {
         "title": "تخصص",
@@ -272,7 +279,8 @@
     "title": "آماده‌اید کسب‌وکارتان را هوشمندتر کنید؟",
     "subtitle": "اگر ایده‌ای برای استفاده از هوش مصنوعی در کسب‌وکار خود دارید، با ما صحبت کنید. با بررسی نیازهای شما، بهترین راهکار را پیشنهاد می‌دهیم.",
     "ctaPrimary": "شروع یک گفت‌وگوی تخصصی",
-    "ctaSecondary": "دریافت مشاوره"
+    "ctaSecondary": "دریافت مشاوره",
+    "askAssistant": "از دستیار بپرس"
   },
   "About": {
     "pageTitle": "درباره ما",
@@ -324,13 +332,28 @@
     "open": "باز کردن دستیار",
     "close": "بستن دستیار",
     "title": "دستیار اکسینو AI",
-    "subtitle": "درباره خدمات و راهکارها بپرسید",
+    "subtitle": "پاسخ دقیق درباره خدمات، راهکارها و همکاری",
     "placeholder": "پیام خود را بنویسید...",
     "send": "ارسال",
+    "stop": "توقف",
+    "retry": "تلاش دوباره",
+    "newChat": "گفتگوی جدید",
+    "online": "آنلاین",
     "thinking": "در حال فکر کردن...",
-    "welcome": "سلام! درباره خدمات، راهکارها یا نحوه همکاری بپرسید.",
+    "welcome": "سلام! من دستیار اکسینو AI هستم. درباره خدمات، صنایع، فرآیند همکاری یا تماس بپرسید.",
     "error": "ارسال پیام ممکن نشد. کمی بعد دوباره تلاش کنید.",
     "empty": "لطفاً پیامی بنویسید.",
-    "offline": "چت‌بات هنوز به بک‌اند متصل نیست. N8N_WEBHOOK_URL را تنظیم کنید."
+    "offline": "چت‌بات پیکربندی نشده است. NARAROUTER_API_KEY را تنظیم کنید.",
+    "suggestions": {
+      "services": "چه خدماتی ارائه می‌دهید؟",
+      "chatbot": "چت‌بات هوشمند چگونه کار می‌کند؟",
+      "process": "فرآیند همکاری شما چیست؟",
+      "contact": "چطور مشاوره بگیرم؟"
+    },
+    "followUps": {
+      "pricing": "هزینه تقریباً چقدر است؟",
+      "timeline": "پروژه معمولاً چقدر طول می‌کشد؟",
+      "consult": "می‌خواهم مشاوره رایگان بگیرم"
+    }
   }
 }
