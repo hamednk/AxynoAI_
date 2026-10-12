@@ -182,15 +182,17 @@ function buildLocaleChunks(
             "اکسینو AI خدمات طراحی و پیاده‌سازی راهکارهای هوش مصنوعی برای کسب‌وکارها ارائه می‌دهد.",
             "برای شروع می‌توانید از صفحه تماس درخواست مشاوره رایگان بفرستید یا با شماره و ایمیل شرکت ارتباط بگیرید.",
             "خدمات شامل چت‌بات، CRM هوشمند، تولید محتوا، استخراج اطلاعات، ربات تلگرام، پزشکی، آموزش، املاک، امنیت سایبری و موارد دیگر است.",
-            "اگر اطلاعات کافی در دانش موجود نبود، کاربر را به مشاوره و تماس هدایت کنید.",
+            "هزینه پروژهٔ‌محور است و به دامنه، داده، کانال‌ها و یکپارچه‌سازی بستگی دارد؛ بعد از مشاوره رایگان برآورد شفاف داده می‌شود.",
+            "فقط برای موضوع کاملاً خارج از خدمات AxynoAI کاربر را به موضوع کسب‌وکار برگردان؛ برای هزینه نگو نمی‌دانم.",
           ].join("\n")
         : [
             "AxynoAI designs and implements AI solutions for businesses.",
             "Users can request a free consultation via the contact page, phone, or email.",
             "Services include chatbots, AI CRM, content generation, data extraction, Telegram bots, healthcare, education, real estate, cybersecurity, and more.",
-            "If knowledge is insufficient, guide the user to consultation and contact.",
+            "Pricing is project-based and depends on scope, data, channels, and integrations; a clear estimate follows free consultation.",
+            "Only steer away from topics clearly outside AxynoAI services; for cost questions never say you do not know.",
           ].join("\n"),
-    tags: ["faq", "consult"],
+    tags: ["faq", "consult", "pricing"],
   });
 
   chunks.push(...buildExtraChunks(locale));
