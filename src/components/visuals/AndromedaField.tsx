@@ -12,6 +12,11 @@ type AndromedaFieldProps = {
 };
 
 const LOGO_URL = "/logo.jpg";
+const LOGO_PLANE_SIZE = 3.05;
+const MOBILE_HEADER_CLEARANCE = 84;
+const MOBILE_COPY_GAP = 12;
+const MOBILE_MIN_SCALE = 0.28;
+const MOBILE_MAX_SCALE = 0.49;
 
 const binaryVertexShader = `
   attribute float aDigit;
@@ -224,7 +229,7 @@ export function AndromedaField({
       uniforms: logoUniforms,
       vertexShader: logoVertexShader,
     });
-    const logoGeometry = new THREE.PlaneGeometry(3.05, 3.05, 48, 48);
+    const logoGeometry = new THREE.PlaneGeometry(LOGO_PLANE_SIZE, LOGO_PLANE_SIZE, 48, 48);
     const logoMesh = new THREE.Mesh(logoGeometry, logoMaterial);
     logoMesh.frustumCulled = false;
     logoMesh.renderOrder = 2;
@@ -318,8 +323,23 @@ export function AndromedaField({
       camera.updateProjectionMatrix();
 
       if (isMobile) {
-        stage.position.set(0, 0.72, 0);
-        stage.scale.setScalar(0.49);
+        const halfHeight =
+          Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.position.z;
+        const pxPerUnit = height / (2 * halfHeight);
+        const section = container.closest("section") ?? container;
+        const copy = section.querySelector<HTMLElement>("[data-hero-copy]");
+        const freeTop = MOBILE_HEADER_CLEARANCE;
+        const freeBottom = copy
+          ? copy.getBoundingClientRect().top - section.getBoundingClientRect().top - MOBILE_COPY_GAP
+          : height * 0.5;
+        const freePx = Math.max(80, freeBottom - freeTop);
+        const scale = Math.min(
+          MOBILE_MAX_SCALE,
+          Math.max(MOBILE_MIN_SCALE, freePx / pxPerUnit / LOGO_PLANE_SIZE),
+        );
+        const centerPx = freeTop + freePx / 2;
+        stage.position.set(0, halfHeight - centerPx / pxPerUnit, 0);
+        stage.scale.setScalar(scale);
         baseTiltX = -0.02;
         baseTiltY = 0;
       } else {
@@ -395,6 +415,12 @@ export function AndromedaField({
       requestRender();
     });
     resizeObserver.observe(container);
+    const heroCopy = (container.closest("section") ?? container).querySelector<HTMLElement>(
+      "[data-hero-copy]",
+    );
+    for (const element of heroCopy?.parentElement?.children ?? []) {
+      resizeObserver.observe(element);
+    }
 
     const intersectionObserver = new IntersectionObserver(
       ([entry]) => {

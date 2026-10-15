@@ -84,6 +84,7 @@ export function Hero() {
 
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl min-w-0 flex-col justify-end px-4 pb-28 pt-24 sm:px-6 sm:pb-32 sm:pt-28 lg:justify-center lg:px-8 lg:pb-36 lg:pt-20">
         <motion.p
+          data-hero-copy
           className="font-mono-signal mb-4 inline-flex w-fit items-center gap-2 rounded-full border border-card-border bg-background/40 px-3 py-1.5 text-[10px] text-steel backdrop-blur sm:mb-5 sm:text-[11px]"
           initial={reduce ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
